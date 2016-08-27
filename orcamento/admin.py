@@ -6,6 +6,11 @@ class ContaInline(admin.TabularInline):
     model = models.Conta
 
 
+@admin.register(models.Categoria)
+class CategoriaAdmin(admin.ModelAdmin):
+    pass
+
+
 @admin.register(models.Orcamento)
 class OrcamentoAdmin(admin.ModelAdmin):
     inlines = [ContaInline]

@@ -42,6 +42,7 @@ class Command(BaseCommand):
                 nova_conta.nome = conta.nome
                 nova_conta.descricao = conta.descricao
                 nova_conta.previsto = conta.previsto
+                nova_conta.categoria = conta.categoria
                 nova_conta.save()
                 self.stdout.write('%s inserido.' % nova_conta)
         else:

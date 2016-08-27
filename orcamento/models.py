@@ -4,6 +4,16 @@ from decimal import *
 from django.db import models
 
 
+class Categoria(models.Model):
+    class Meta:
+        verbose_name = 'Categoria'
+        verbose_name_plural = 'Categoria'
+    descricao = models.CharField('Descrição', max_length=50)
+
+    def __unicode__(self):
+        return self.descricao
+
+
 class Orcamento(models.Model):
     class Meta:
         verbose_name = 'Orçamento'
@@ -58,6 +68,7 @@ class Conta(models.Model):
     atual = models.DecimalField('Valor Atual', max_digits=8, decimal_places=2, blank=True, null=False)
     pago = models.DecimalField('Valor Pago', max_digits=8, decimal_places=2, blank=True, null=False, default=0)
     situacao = models.IntegerField('Situação', choices=SITUACAO_CHOICES, blank=True, default=PAGAR)
+    categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, related_name='contas', null=True, blank=True)
 
     @property
     def a_pagar(self):
