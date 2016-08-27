@@ -69,7 +69,7 @@ class Conta(models.Model):
         return self.a_pagar <= 0
 
     def save(self, *args, **kwargs):
-        if not self.atual:
+        if self.atual is None:
             self.atual = self.previsto
         if self.esta_pago():
             self.situacao = Conta.PAGO
