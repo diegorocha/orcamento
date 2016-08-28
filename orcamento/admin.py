@@ -18,7 +18,7 @@ class OrcamentoAdmin(admin.ModelAdmin):
 
 @admin.register(models.Conta)
 class ContaAdmin(admin.ModelAdmin):
-    list_display = ['orcamento', 'nome', 'descricao', 'previsto', 'atual', 'a_pagar', 'pago', 'situacao', ]
+    list_display = ['orcamento', 'nome', 'descricao', 'categoria', 'previsto', 'atual', 'a_pagar', 'pago', 'situacao', ]
     list_filter = ['orcamento', 'situacao', ]
     actions = ['acertar_situacao', ]
 

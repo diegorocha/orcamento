@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <form class="form-horizontal">
+        <fieldset>
+        <legend>Categorizar Conta</legend>
+        <div class="">
+            <table class="table table-bordered table-striped table-hover" id="conta">
+                <thead>
+                    <tr>
+                        <th>Orçamento</th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Valor Previsto</th>
+                        <th>Valor Atual</th>
+                        <th>Valor Pago</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="{% if conta.esta_pago %}pago{% endif %}" data-id="{{conta.pk}}">
+                        <td><span class="text nome">{{conta.nome}}</span></td>
+                        <td><span class="text descricao">{{conta.descricao}}</span></td>
+                        <td><span class="text previsto">{{conta.previsto}}</span></td>
+                        <td><span class="text atual">{{conta.atual}}</span></td>
+                        <td><span class="text">{{conta.pago}}</span></td>
+                        <td>{{conta.a_pagar}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="7" class="text-center"><strong>Carregando...</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="categoria">Categoria</label>
+          <div class="col-md-4">
+            <select id="categoria" name="categoria" class="form-control">
+                <option>Carregando...</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <button id="refresh_categoria" name="refresh_categoria" class="btn btn-primary">&#x21bb;</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="singlebutton"></label>
+          <div class="col-md-4">
+            <button id="btnEnviar" name="btnEnviar" class="btn btn-success">Salvar</button>
+          </div>
+        </div>
+        </fieldset>
+    </form>
+{% endblock %}
+
+{% block custom_js %}
+    <script type="text/javascript">
+        var CRSF_TOKEN = '{{csrf_token}}';
+    </script>
+    <script src="{% static 'js/ajustar-contas-sem-categoria.js' %}"></script>
+{% endblock %}

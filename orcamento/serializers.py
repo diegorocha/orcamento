@@ -8,6 +8,13 @@ class OrcamentoSerializer(serializers.ModelSerializer):
 
 
 class ContaSerializer(serializers.ModelSerializer):
+    orcamento = serializers.StringRelatedField()
+
     class Meta:
         model = models.Conta
         read_only_fields = ('a_pagar',)
+
+
+class CategoriaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Categoria
