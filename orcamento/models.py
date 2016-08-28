@@ -26,12 +26,14 @@ class Orcamento(models.Model):
         value = self.contas.aggregate(models.Sum('previsto'))
         if value:
             return value.values()[0]
+        return 0
 
     @property
     def atual(self):
         value = self.contas.aggregate(models.Sum('atual'))
         if value:
             return value.values()[0]
+        return 0
 
     @property
     def a_pagar(self):

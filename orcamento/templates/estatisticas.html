@@ -2,9 +2,13 @@
 {% load static %}
 {% load l10n %}
 {% block content %}
-
+<div id="chart_div">
+    <h2 class="text-center">Carregando dados...</h2>
+</div>
 {% endblock %}
 
 {% block custom_js %}
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="{% static 'js/estatisticas.js' %}"></script>
 {% endblock %}

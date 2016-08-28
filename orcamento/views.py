@@ -1,3 +1,4 @@
+import utils
 import models
 import serializers
 from datetime import date
@@ -27,6 +28,15 @@ class OrcamentoView(LoginRequiredMixin, generic.DetailView):
 class OrcamentoViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     queryset = models.Orcamento.objects.all()
     serializer_class = serializers.OrcamentoSerializer
+
+    @list_route()
+    def estatisticas(self, request):
+        return Response(utils.gerar_estatisticas())
+
+    @detail_route()
+    def estatistica(self, request, pk):
+        orcamento = get_object_or_404(self.queryset, pk=pk)
+        return Response(utils.estatisticas_orcamento(orcamento))
 
 
 class ContaViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
