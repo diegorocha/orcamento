@@ -27,7 +27,13 @@
             </button>
             <a class="navbar-brand" href="{% url 'orcamento:orcamento_atual' %}">Orçamento Atual</a>
             <ul class="nav navbar-nav">
-              <li><a href="{% url 'admin:orcamento_orcamento_add' %}">Novo Orçamento</a></li>
+              <li><a href="{% url 'admin:index' %}">Admin</a></li>
+            </ul>
+            <ul class="nav navbar-nav">
+              <li><a href="{% url 'orcamento:estatistica' %}">Estatísticas</a></li>
+            </ul>
+            <ul class="nav navbar-nav">
+              <li><a href="{% url 'orcamento:ajustar-categorias' %}">Ajustar Categorias</a></li>
             </ul>
           </div>
         </div>
