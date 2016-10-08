@@ -71,6 +71,9 @@ class Conta(models.Model):
     pago = models.DecimalField('Valor Pago', max_digits=8, decimal_places=2, blank=True, null=False, default=0)
     situacao = models.IntegerField('Situação', choices=SITUACAO_CHOICES, blank=True, default=PAGAR)
     categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, related_name='contas', null=True, blank=True)
+    parcela_atual = models.IntegerField('Parcela', blank=True, default=1)
+    parcelas = models.IntegerField('Parcelas', blank=True, default=1)
+    recorrente = models.BooleanField('Recorrente', blank=True, default=False)
 
     @property
     def a_pagar(self):
@@ -86,6 +89,8 @@ class Conta(models.Model):
             self.atual = self.previsto
         if self.esta_pago():
             self.situacao = Conta.PAGO
+        if self.parcelas > 1:
+            self.recorrente = True
         super(Conta, self).save(*args, **kwargs)
 
     def __unicode__(self):

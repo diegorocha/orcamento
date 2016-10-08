@@ -26,7 +26,7 @@ class Command(BaseCommand):
         orcamento_origem = models.Orcamento.objects.filter(ano=ano_origem, mes=mes_origem).first()
         if not orcamento_origem:
             raise CommandError('Orçamento "%s" não encontrado' % origem)
-        contas = models.Conta.objects.filter(orcamento__ano=ano_origem, orcamento__mes=mes_origem)
+        contas = models.Conta.objects.filter(orcamento__ano=ano_origem, orcamento__mes=mes_origem, recorrente=True)
         orcamento_destino = models.Orcamento.objects.filter(ano=ano_destino, mes=mes_destino).first()
         contas_destino = models.Conta.objects.filter(orcamento__ano=ano_destino, orcamento__mes=mes_destino).count()
         if contas_destino == 0 or kwargs.get('force'):
@@ -43,6 +43,9 @@ class Command(BaseCommand):
                 nova_conta.descricao = conta.descricao
                 nova_conta.previsto = conta.previsto
                 nova_conta.categoria = conta.categoria
+                if conta.parcelas > 1:
+                    nova_conta.parcela_atual = conta.parcela_atual + 1
+                nova_conta.parcelas = conta.parcelas
                 nova_conta.save()
                 self.stdout.write('%s inserido.' % nova_conta)
         else:
