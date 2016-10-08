@@ -18,7 +18,7 @@
     {% for conta in object.contas.all %}
         <tr class="{% if conta.esta_pago %}pago{% endif %}" data-id="{{conta.pk}}">
             <td><span class="text nome">{{conta.nome}}</span><input type="text" class="nome" value="{{conta.nome}}" /></td>
-            <td><span class="text descricao">{{conta.descricao}}</span><input type="text" class="descricao" value="{{conta.descricao}}" /></td>
+            <td><span class="text descricao">{{conta.descricao}}{% if conta.parcelas > 1 %} {{conta.parcela_atual|stringformat:"02d"}}/{{conta.parcelas|stringformat:"02d"}}{% endif %}</span><input type="text" class="descricao" value="{{conta.descricao}}" /></td>
             <td><span class="text previsto">{{conta.previsto}}</span><input type="number" step="0.1" class="previsto" value="{{conta.previsto|unlocalize}}" /></td>
             <td><span class="text atual">{{conta.atual}}</span><input type="number" step="0.1" class="atual" value="{{conta.atual|unlocalize}}" /></td>
             <td><span class="text">{{conta.pago}}</span><input type="number" step="0.1" class="pago" value="{{conta.pago|unlocalize}}" /></td>
