@@ -1,5 +1,80 @@
 $(document).ready(function(){
 
+    function drawChartMercado(data){
+        var total = {'name': 'Total', 'data': []};
+        data.data.forEach(function(serie){
+            serie.data.forEach(function(value, index){
+                var sum = total.data[index] || 0;
+                sum += value;
+                total.data[index] = parseFloat(sum.toFixed(2));
+            });
+        });
+        data.data.push(total);
+        $('#chart_div_mercado').highcharts({
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: 'Gastos com Mercado'
+            },
+            xAxis: {
+                categories: data.eixos,
+            },
+            yAxis: {
+                title: {
+                    text: 'R$'
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                }
+            },
+            series: data.data,
+        });
+    }
+
+    function drawChartTotal(data){
+        $('#chart_div_total').highcharts({
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: 'Total Orçamento'
+            },
+            xAxis: {
+                categories: data.eixos,
+            },
+            yAxis: {
+                title: {
+                    text: 'R$'
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                }
+            },
+            series: data.data,
+        });
+    }
+
     function drawChart(data, i){
         var chart_div = "chart_div_" + i
         var chart_div_selector = '#' + chart_div;
@@ -42,6 +117,22 @@ $(document).ready(function(){
         });
     }
 
+    function loadChartMercado(){
+        $.ajax({
+            url: "/api/orcamento/mercado/",
+        }).success(function(data){
+            drawChartMercado(data);
+        });
+    }
+
+    function loadChartTotal(){
+        $.ajax({
+            url: "/api/orcamento/total/",
+        }).success(function(data){
+            drawChartTotal(data);
+        });
+    }
+
     function loadChart(){
         $.ajax({
             url: "/api/orcamento/estatisticas/",
@@ -54,4 +145,6 @@ $(document).ready(function(){
     }
 
     loadChart();
+    loadChartMercado();
+    loadChartTotal();
 });
