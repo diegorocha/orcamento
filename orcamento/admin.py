@@ -3,7 +3,13 @@ import models
 
 
 class ContaInline(admin.TabularInline):
+    extra = 0
     model = models.Conta
+
+
+class MercadoInline(admin.TabularInline):
+    extra = 0
+    model = models.Mercado
 
 
 @admin.register(models.Categoria)
@@ -13,7 +19,8 @@ class CategoriaAdmin(admin.ModelAdmin):
 
 @admin.register(models.Orcamento)
 class OrcamentoAdmin(admin.ModelAdmin):
-    inlines = [ContaInline]
+    list_filter = ['ano']
+    inlines = [ContaInline, MercadoInline]
 
 
 @admin.register(models.Conta)

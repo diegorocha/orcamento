@@ -33,6 +33,14 @@ class OrcamentoViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     def estatisticas(self, request):
         return Response(utils.gerar_estatisticas())
 
+    @list_route()
+    def mercado(self, request):
+        return Response(utils.estatisticas_mercado())
+
+    @list_route()
+    def total(self, request):
+        return Response(utils.estatisticas_total())
+
     @detail_route()
     def estatistica(self, request, pk):
         orcamento = get_object_or_404(self.queryset, pk=pk)

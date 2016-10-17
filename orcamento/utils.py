@@ -36,6 +36,30 @@ def estatisticas_orcamento(orcamento):
 
 def gerar_estatisticas():
     estatisticas = []
-    for orcamento in models.Orcamento.objects.order_by('-ano', '-mes'):
+    for orcamento in models.Orcamento.objects.order_by('-ano', '-mes')[:12]:
         estatisticas.append(estatisticas_orcamento(orcamento))
     return estatisticas
+
+
+def estatisticas_mercado():
+    data = {'eixos': [],
+            'data': [{'name': 'Principal', 'data': []},
+                     {'name': 'Outros', 'data': []}]
+           }
+    for orcamento in models.Orcamento.objects.filter(mercados__isnull=False).distinct().order_by('-ano', '-mes')[:12].reverse():
+        data['eixos'].append(str(orcamento))
+        data['data'][0]['data'].append(orcamento.mercado_principal)
+        data['data'][1]['data'].append(orcamento.mercado_outros)
+    return data
+
+
+def estatisticas_total():
+    data = {'eixos': [],
+            'data': [{'name': 'Previsto', 'data': []},
+                     {'name': 'Final', 'data': []}]
+           }
+    for orcamento in models.Orcamento.objects.order_by('-ano', '-mes')[:12].reverse():
+        data['eixos'].append(str(orcamento))
+        data['data'][0]['data'].append(orcamento.previsto)
+        data['data'][1]['data'].append(orcamento.atual)
+    return data
