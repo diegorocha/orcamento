@@ -8,6 +8,7 @@ class Categoria(models.Model):
     class Meta:
         verbose_name = 'Categoria'
         verbose_name_plural = 'Categoria'
+        ordering = ['descricao']
     descricao = models.CharField('Descrição', max_length=50)
 
     def __unicode__(self):

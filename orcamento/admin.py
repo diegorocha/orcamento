@@ -21,6 +21,7 @@ class CategoriaAdmin(admin.ModelAdmin):
 class OrcamentoAdmin(admin.ModelAdmin):
     list_filter = ['ano']
     inlines = [ContaInline, MercadoInline]
+    list_display = ['__unicode__', 'previsto', 'atual', 'a_pagar', 'mercado_principal']
 
 
 @admin.register(models.Conta)
