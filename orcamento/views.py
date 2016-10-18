@@ -7,6 +7,7 @@ from django.views import generic
 from rest_framework import viewsets
 from rest_framework.response import Response
 from django.core.urlresolvers import reverse
+from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.decorators import detail_route, list_route
@@ -25,7 +26,8 @@ class OrcamentoView(LoginRequiredMixin, generic.DetailView):
         return get_object_or_404(models.Orcamento, ano=self.kwargs['ano'], mes=self.kwargs['mes'])
 
 
-class OrcamentoViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
+class OrcamentoViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
     queryset = models.Orcamento.objects.all()
     serializer_class = serializers.OrcamentoSerializer
 
@@ -47,9 +49,14 @@ class OrcamentoViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
         return Response(utils.estatisticas_orcamento(orcamento))
 
 
-class ContaViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
+class ContaViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
     queryset = models.Conta.objects.all()
-    serializer_class = serializers.ContaSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return serializers.ContaSerializerCreate
+        return serializers.ContaSerializer
 
     @list_route()
     def sem_categoria(self, request):
