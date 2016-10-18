@@ -15,6 +15,11 @@ class ContaSerializer(serializers.ModelSerializer):
         read_only_fields = ('a_pagar',)
 
 
+class ContaSerializerCreate(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Conta
+
 class CategoriaSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Categoria
