@@ -2,13 +2,41 @@ $(document).ready(function(){
 
     function drawChartMercado(data){
         var total = {'name': 'Total', 'data': []};
-        data.data.forEach(function(serie){
+        data.data.forEach(function(serie, i){
+            var min = serie.data[0];
+            var max = serie.data[0];
+            var soma = 0;
             serie.data.forEach(function(value, index){
                 var sum = total.data[index] || 0;
                 sum += value;
+                if(value < min){
+                    min = value;
+                }
+                if(value > max){
+                    max = value;
+                }
+                soma += value;
                 total.data[index] = parseFloat(sum.toFixed(2));
             });
+            $('#avg_'+ i +'_min').html(min.toFixed(2));
+            $('#avg_'+ i +'_med').html((soma / serie.data.length).toFixed(2));
+            $('#avg_'+ i +'_max').html(max.toFixed(2));
         });
+        var total_min = total.data[0];
+        var total_max = total.data[0];
+        var total_soma = 0;
+        total.data.forEach(function(value){
+            if(value < total_min){
+                total_min = value;
+            }
+            if(value > total_max){
+                total_max = value;
+            }
+            total_soma += value;
+        });
+        $('#avg_2_min').html(total_min.toFixed(2));
+        $('#avg_2_med').html((total_soma / total.data.length).toFixed(2));
+        $('#avg_2_max').html(total_max.toFixed(2));
         data.data.push(total);
         $('#chart_div_mercado').highcharts({
             chart: {
@@ -40,6 +68,7 @@ $(document).ready(function(){
             },
             series: data.data,
         });
+        $('#table_mercado').show();
     }
 
     function drawChartTotal(data){

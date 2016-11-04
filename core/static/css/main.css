@@ -7,3 +7,6 @@ td input {
 .grafico_estatistica{
     margin-bottom: 50px;
 }
+#table_mercado {
+    display: none;
+}
