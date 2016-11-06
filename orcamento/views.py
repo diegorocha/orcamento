@@ -1,16 +1,9 @@
-import utils
 import models
-import serializers
 from datetime import date
-from django.http import Http404
 from django.views import generic
-from rest_framework import viewsets
-from rest_framework.response import Response
 from django.core.urlresolvers import reverse
-from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
-from rest_framework.decorators import detail_route, list_route
 
 
 class OrcamentoAtual(generic.RedirectView):
@@ -24,59 +17,6 @@ class OrcamentoView(LoginRequiredMixin, generic.DetailView):
 
     def get_object(self, queryset=None):
         return get_object_or_404(models.Orcamento, ano=self.kwargs['ano'], mes=self.kwargs['mes'])
-
-
-class OrcamentoViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
-    queryset = models.Orcamento.objects.all()
-    serializer_class = serializers.OrcamentoSerializer
-
-    @list_route()
-    def estatisticas(self, request):
-        return Response(utils.gerar_estatisticas())
-
-    @list_route()
-    def mercado(self, request):
-        return Response(utils.estatisticas_mercado())
-
-    @list_route()
-    def total(self, request):
-        return Response(utils.estatisticas_total())
-
-    @detail_route()
-    def estatistica(self, request, pk):
-        orcamento = get_object_or_404(self.queryset, pk=pk)
-        return Response(utils.estatisticas_orcamento(orcamento))
-
-
-class ContaViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
-    queryset = models.Conta.objects.all()
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return serializers.ContaSerializerCreate
-        return serializers.ContaSerializer
-
-    @list_route()
-    def sem_categoria(self, request):
-        queryset = self.queryset.filter(categoria__isnull=True)
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
-    @list_route()
-    def ajustar(self, request):
-        queryset = self.queryset.filter(categoria__isnull=True).first()
-        if queryset:
-            serializer = self.get_serializer(queryset)
-            return Response(serializer.data)
-        else:
-            raise Http404
-
-
-class CategoriaViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
-    queryset = models.Categoria.objects.all()
-    serializer_class = serializers.CategoriaSerializer
 
 
 class EstatisticaView(LoginRequiredMixin, generic.TemplateView):
