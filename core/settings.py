@@ -31,7 +31,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'orcamento'
+    'orcamento',
+    'compras',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -113,7 +114,7 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*')
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
-STATIC_URL = '/static/'
+STATIC_URL = config('STATIC_URL', default='/static/')
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = [

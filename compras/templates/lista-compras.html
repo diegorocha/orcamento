@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+{% load l10n %}
+{% block content %}
+<div class="panel panel-success">
+    <div class="panel-heading">Filtro</div>
+    <div class="panel-body">
+        <input type="checkbox" id="cbFiltroComprar" value="">&nbsp;<label for="cbFiltroComprar">Apenas itens para comprar</label>
+        <div class=""></div>
+    </div>
+</div>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Quantidade</th>
+            <th>Comprar</th>
+            <th>Comprado</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item_lista in object.itemcompra_set.all %}
+        <tr class="{{item_lista.comprar|yesno:',nao-comprar'}} {{item_lista.comprado|yesno:',item-nao-comprado'}}" data-id="{{item_lista.pk}}" data-comprar="{{item_lista.comprar}}">
+            <td>{{item_lista.item}}</td>
+            <td>{{item_lista.quantidade}}</td>
+            <td><input type="checkbox" class="comprar" id="comprar_{{item_lista.pk}}" data-id="{{item_lista.pk}}" value="" {{item_lista.comprar|yesno:"checked,"}}/></td>
+            <td><input type="checkbox" class="comprado" id="comprado_{{item_lista.pk}}" data-id="{{item_lista.pk}}" value="" {{item_lista.comprado|yesno:"checked,"}}/></td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="3">Nenhum item nessa lista</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block custom_js %}
+<script src="{% static 'js/compras.js' %}"></script>
+{% endblock %}

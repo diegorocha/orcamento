@@ -10,3 +10,10 @@ td input {
 #table_mercado {
     display: none;
 }
+.item-nao-comprado {
+    font-weight: bold;
+}
+.nao-comprar{
+    text-decoration: line-through;
+    font-weight: normal !important;
+}
