@@ -111,23 +111,3 @@ class Conta(models.Model):
 
     def __unicode__(self):
         return '%s de %s' % (self.nome, self.orcamento)
-
-
-class Mercado(models.Model):
-    class Meta:
-        verbose_name = 'Mercado'
-        verbose_name_plural = 'Mercado'
-
-    PRINCIPAL = 0
-    OUTROS = 1
-
-    TIPO_CHOICES = ((PRINCIPAL, 'Principal'), (OUTROS, 'Outros'), )
-
-    orcamento = models.ForeignKey(Orcamento, on_delete=models.CASCADE, related_name='mercados')
-    descricao = models.CharField('Descrição', max_length=50, blank=True, null=True)
-    tipo = models.IntegerField('Tipo', choices=TIPO_CHOICES, blank=True, default=PRINCIPAL)
-    valor = models.DecimalField('Valor Atual', max_digits=8, decimal_places=2, )
-    itens = models.IntegerField('Itens', blank=True, null=True)
-
-    def __unicode__(self):
-        return 'Mercado de %s' % (self.orcamento)

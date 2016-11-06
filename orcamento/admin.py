@@ -1,4 +1,5 @@
 from django.contrib import admin
+from compras.admin import MercadoInline
 import models
 
 
@@ -7,16 +8,11 @@ class ContaInline(admin.TabularInline):
     model = models.Conta
 
 
-class MercadoInline(admin.TabularInline):
-    extra = 0
-    model = models.Mercado
-
-
 @admin.register(models.Categoria)
 class CategoriaAdmin(admin.ModelAdmin):
     pass
 
-
+    
 @admin.register(models.Orcamento)
 class OrcamentoAdmin(admin.ModelAdmin):
     list_filter = ['ano']

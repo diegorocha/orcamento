@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="Diego Rocha">
-    <!-- <link rel="icon" href="../../favicon.ico"> -->
     {% block head %}
     <title>Orçamento</title>
     {% endblock head %}
@@ -35,6 +34,9 @@
             </ul>
             <ul class="nav navbar-nav">
               <li><a href="{% url 'orcamento:ajustar-categorias' %}">Ajustar Categorias</a></li>
+            </ul>
+            <ul class="nav navbar-nav">
+              <li><a href="{% url 'compras:lista-atual' %}">Lista de Compras</a></li>
             </ul>
           </div>
         </div>
