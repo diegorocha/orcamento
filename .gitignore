@@ -68,3 +68,5 @@ target/
 *.env
 
 .vscode
+
+core/staticfiles/
