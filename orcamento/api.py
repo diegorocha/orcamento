@@ -62,8 +62,8 @@ class ContaViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
-            return serializers.ContaSerializerCreate
-        return serializers.ContaSerializer
+            return ContaSerializerCreate
+        return ContaSerializer
 
     @list_route()
     def sem_categoria(self, request):
