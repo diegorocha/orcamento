@@ -8,7 +8,7 @@ class Mercado(models.Model):
     class Meta:
         verbose_name = 'Mercado'
         verbose_name_plural = 'Mercado'
-        ordering('-orcamento', 'tipo')
+        ordering = ('orcamento', 'tipo')
 
     PRINCIPAL = 0
     OUTROS = 1
