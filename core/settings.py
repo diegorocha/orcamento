@@ -100,6 +100,7 @@ REST_FRAMEWORK = {
 }
 
 ADMINS = ((config('ADMIN_NAME'), config('ADMIN_EMAIL')), )
+SERVER_EMAIL = config('SERVER_EMAIL', default='root@localhost')
 
 if config('USE_SMTP', default=False, cast=bool):
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -119,8 +120,5 @@ if not DEBUG:
     CSRF_COOKIE_SECURE = True
     CSRF_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SECURE = True
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_SECONDS = 15768000
-    SECURE_SSL_REDIRECT = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_BROWSER_XSS_FILTER = True
