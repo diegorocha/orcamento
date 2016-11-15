@@ -14,7 +14,7 @@ class ItemCompraInline(admin.TabularInline):
 
 @admin.register(models.Mercado)
 class MercadoAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['__unicode__', 'tipo', 'valor']
 
 
 @admin.register(models.SecaoLista)

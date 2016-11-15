@@ -12,6 +12,8 @@
     {% endblock head %}
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="{% static "css/main.css" %}" rel="stylesheet">
+    {% block custom_head %}
+    {% endblock custom_head %}
   </head>
   <body>
     <nav class="navbar navbar-inverse navbar-default">
@@ -37,6 +39,18 @@
             </ul>
             <ul class="nav navbar-nav">
               <li><a href="{% url 'compras:lista-atual' %}">Lista de Compras</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% if user.is_authenticated %}{{ user.get_username }}{% else %}Usuário{% endif %}<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  {% if user.is_authenticated %}
+                  <li><a href="{% url 'logout' %}">Sair</a></li>
+                  {% else %}
+                  <li><a href="{% url 'login' %}">Login</a></li>
+                  {% endif %}
+                </ul>
+              </li>
             </ul>
           </div>
         </div>
