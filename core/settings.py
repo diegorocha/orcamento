@@ -79,7 +79,7 @@ USE_L10N = True
 USE_TZ = True
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*')
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
 
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = config('STATIC_URL', default='/static/')
