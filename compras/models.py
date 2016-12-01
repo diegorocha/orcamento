@@ -71,7 +71,7 @@ class ListaCompras(models.Model):
         if self.itens and self.itens.count() == 0:
             # Adiciona todos os itens padrões atuais
             for item in ItensLista.objects.filter(ativo=True):
-                item_compra = ItemCompra(itens=item, lista=self)
+                item_compra = ItemCompra(item=item, lista=self)
                 item_compra.comprar = True
                 item_compra.comprado = False
                 item_compra.save()
