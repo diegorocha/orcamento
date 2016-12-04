@@ -18,6 +18,12 @@ $(document).ready(function(){
                 soma += value;
                 total.data[index] = parseFloat(sum.toFixed(2));
             });
+            if(min == undefined){
+                min = 0;
+            }
+            if(max == undefined){
+                max = 0;
+            }
             $('#avg_'+ i +'_min').html(min.toFixed(2));
             $('#avg_'+ i +'_med').html((soma / serie.data.length).toFixed(2));
             $('#avg_'+ i +'_max').html(max.toFixed(2));
