@@ -9,23 +9,26 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import detail_route, list_route
 
 
-class OrcamentoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Orcamento
-
-
-class ContaSerializer(serializers.ModelSerializer):
-    orcamento = serializers.StringRelatedField()
-
+class ContaBaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Conta
         read_only_fields = ('a_pagar',)
 
 
-class ContaSerializerCreate(serializers.ModelSerializer):
+class ContaSerializer(ContaBaseSerializer):
+    orcamento = serializers.StringRelatedField()
+
+
+class ContaSerializerCreate(ContaBaseSerializer):
+    class Meta:
+        read_only_fields = ()
+
+
+class OrcamentoSerializer(serializers.ModelSerializer):
+    contas = ContaBaseSerializer(many=True)
 
     class Meta:
-        model = models.Conta
+        model = models.Orcamento
 
 
 class CategoriaSerializer(serializers.ModelSerializer):
