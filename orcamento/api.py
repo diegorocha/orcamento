@@ -9,23 +9,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import detail_route, list_route
 
 
-class ContaBaseSerializer(serializers.ModelSerializer):
+class ContaSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Conta
         read_only_fields = ('a_pagar',)
 
 
-class ContaSerializer(ContaBaseSerializer):
-    orcamento = serializers.StringRelatedField()
-
-
-class ContaSerializerCreate(ContaBaseSerializer):
-    class Meta:
-        read_only_fields = ()
-
-
 class OrcamentoSerializer(serializers.ModelSerializer):
-    contas = ContaBaseSerializer(many=True)
+    contas = ContaSerializer(many=True)
 
     class Meta:
         model = models.Orcamento
@@ -62,11 +53,7 @@ class OrcamentoViewSet(viewsets.ModelViewSet):
 class ContaViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = models.Conta.objects.all()
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return ContaSerializerCreate
-        return ContaSerializer
+    serializer_class = ContaSerializer
 
     @list_route()
     def sem_categoria(self, request):
