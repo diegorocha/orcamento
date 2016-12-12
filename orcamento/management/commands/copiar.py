@@ -47,6 +47,7 @@ class Command(BaseCommand):
                     if conta.parcelas > 1:
                         nova_conta.parcela_atual = conta.parcela_atual + 1
                     nova_conta.parcelas = conta.parcelas
+                    nova_conta.recorrente = conta.recorrente
                     nova_conta.save()
                     self.stdout.write('%s inserido.' % nova_conta)
         else:
