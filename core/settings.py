@@ -56,7 +56,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
-    'default': config('DATABASE_URL', cast=db_url)
+    'default': config('DATABASE_URL', cast=db_url, default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'))
 }
 
 if 'test' in sys.argv or 'test_coverage' in sys.argv:  # Covers regular testing and django-coverage
