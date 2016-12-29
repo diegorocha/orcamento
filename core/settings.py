@@ -1,4 +1,5 @@
 import os
+import sys
 from decouple import config
 from dj_database_url import parse as db_url
 
@@ -17,6 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_nose',
     'orcamento',
     'compras',
 ]
@@ -56,6 +58,10 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': config('DATABASE_URL', cast=db_url)
 }
+
+if 'test' in sys.argv or 'test_coverage' in sys.argv:  # Covers regular testing and django-coverage
+    DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -98,6 +104,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     )
 }
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 ADMINS = ((config('ADMIN_NAME'), config('ADMIN_EMAIL')), )
 SERVER_EMAIL = config('SERVER_EMAIL', default='root@localhost')
