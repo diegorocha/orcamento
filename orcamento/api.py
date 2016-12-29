@@ -16,7 +16,7 @@ class ContaSerializer(serializers.ModelSerializer):
 
 
 class OrcamentoSerializer(serializers.ModelSerializer):
-    contas = ContaSerializer(many=True)
+    contas = ContaSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Orcamento
