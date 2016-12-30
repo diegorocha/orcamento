@@ -26,16 +26,12 @@ class Orcamento(models.Model):
     @property
     def previsto(self):
         value = self.contas.aggregate(models.Sum('previsto'))
-        if value:
-            return value.values()[0]
-        return 0
+        return value.values()[0] or 0
 
     @property
     def atual(self):
         value = self.contas.aggregate(models.Sum('atual'))
-        if value:
-            return value.values()[0]
-        return 0
+        return value.values()[0] or 0
 
     @property
     def a_pagar(self):
@@ -47,22 +43,18 @@ class Orcamento(models.Model):
     @property
     def pago(self):
         value = self.contas.aggregate(models.Sum('pago'))
-        if value:
-            return value.values()[0]
+        return value.values()[0] or 0
 
     @property
     def mercado_principal(self):
         value = self.mercados.filter(tipo=0).aggregate(models.Sum('valor'))
-        if value:
-            return value.values()[0]
-        return 0
+        return value.values()[0] or 0
+
 
     @property
     def mercado_outros(self):
         value = self.mercados.filter(tipo=1).aggregate(models.Sum('valor'))
-        if value:
-            return value.values()[0]
-        return 0
+        return value.values()[0] or 0
 
     def __unicode__(self):
         return '%d/%d' % (self.ano, self.mes)

@@ -10,7 +10,7 @@ class LoginRequiredMixin(TestCase):
         super(LoginRequiredMixin, self).setUp()
         username = 'admin'
         password = '4dm1n'
-        User.objects.create_user(username=username, password=password, is_staff=True)
+        User.objects.create_superuser(username=username, password=password, email='')
         self.client.login(username=username, password=password)
 
 
