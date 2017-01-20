@@ -69,6 +69,7 @@ target/
 *.env
 
 .vscode
+.idea
 
 core/staticfiles/
 #TesteGithubHook
