@@ -19,32 +19,58 @@ class OrcamentoViewSetTest(LoginRequiredMixin, ModelViewSetTestCase):
 
     def test_estatisticas(self):
         url = self.endpoint + 'estatisticas/'
+        orcamento = mommy.make(models.Orcamento)
+        categoria = mommy.make(models.Categoria)
+        conta_com_categoria = mommy.make(models.Conta, orcamento=orcamento, categoria=categoria)
+        conta_sem_categoria = mommy.make(models.Conta, orcamento=orcamento, categoria=None)
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
         data = response.json()
         self.assertIsNotNone(data)
         for estatistica in data:
-            self.assertIsNotNone(estatistica['categorias'])
-            self.assertIsNotNone(estatistica['total'])
             self.assertIsNotNone(estatistica['orcamento'])
+            self.assertEquals(estatistica['orcamento'], str(orcamento))
+            self.assertIsNotNone(estatistica['total'])
+            self.assertEquals(estatistica['total'], float(orcamento.previsto))
+            self.assertIsNotNone(estatistica['categorias'])
+            self.assertEquals(len(estatistica['categorias']), models.Categoria.objects.count() + 1)
+            for categoria in estatistica['categorias']:
+                self.assertIsNotNone(categoria['categoria'])
+                self.assertIsNotNone(categoria['percentual'])
+                self.assertIsNotNone(categoria['total'])
 
     def test_mercado(self):
         url = self.endpoint + 'mercado/'
+        for orcamento in mommy.make(models.Orcamento, _quantity=18):
+            mommy.make(Mercado, orcamento=orcamento, tipo=0)
+            mommy.make(Mercado, orcamento=orcamento, tipo=1)
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
         data = response.json()
         self.assertIsNotNone(data)
-        self.assertIsNotNone(data['data'])
         self.assertIsNotNone(data['eixos'])
+        self.assertEquals(len(data['eixos']), 12)
+        self.assertIsNotNone(data['data'])
+        for data in data['data']:
+            self.assertIsNotNone(data['name'])
+            self.assertIsNotNone(data['data'])
 
     def test_total(self):
         url = self.endpoint + 'total/'
+        for orcamento in mommy.make(models.Orcamento, _quantity=18):
+            mommy.make(models.Conta, orcamento=orcamento)
+            mommy.make(models.Conta, orcamento=orcamento)
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
         data = response.json()
         self.assertIsNotNone(data)
-        self.assertIsNotNone(data['data'])
         self.assertIsNotNone(data['eixos'])
+        self.assertEquals(len(data['eixos']), 12)
+        self.assertIsNotNone(data['data'])
+        for data in data['data']:
+            self.assertIsNotNone(data['name'])
+            self.assertIsNotNone(data['data'])
+
 
     def test_estatisticas_orcamento(self):
         orcamento = mommy.make(models.Orcamento)
@@ -178,3 +204,10 @@ class ListaViewTest(LoginRequiredMixin, TestCase):
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.context['object'], orcamento)
+
+
+class EstatisticaView(LoginRequiredMixin, TestCase):
+    def test_get(self):
+        url = reverse('orcamento:estatistica')
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
