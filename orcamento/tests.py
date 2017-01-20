@@ -1,4 +1,10 @@
+# coding=utf-8
 from datetime import date
+from random import randrange
+
+from django.core.management import CommandError
+from django.core.management import call_command
+
 from orcamento import models
 from model_mommy import mommy
 from django.test import TestCase
@@ -206,8 +212,55 @@ class ListaViewTest(LoginRequiredMixin, TestCase):
         self.assertEquals(response.context['object'], orcamento)
 
 
-class EstatisticaView(LoginRequiredMixin, TestCase):
+class EstatisticaViewTest(LoginRequiredMixin, TestCase):
     def test_get(self):
         url = reverse('orcamento:estatistica')
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
+
+
+class CopiarTest(TestCase):
+    def test_orcamento_nao_existe(self):
+        args = ['1234/12', '1234/13']
+        opts = {}
+        with self.assertRaises(CommandError):
+            call_command('copiar', *args, **opts)
+
+    def test_orcamento_destino_com_contas(self):
+        origem = mommy.make(models.Orcamento)
+        destino = mommy.make(models.Orcamento)
+        mommy.make(models.Conta, orcamento=destino)
+        args = [str(origem), str(destino)]
+        opts = {}
+        with self.assertRaises(CommandError):
+            call_command('copiar', *args, **opts)
+
+    def test_copiar_apenas_recorrente(self):
+        origem = mommy.make(models.Orcamento)
+        qtd_recorrente = randrange(10, 20)
+        mommy.make(models.Conta, orcamento=origem, recorrente=True, _quantity=qtd_recorrente)
+        mommy.make(models.Conta, orcamento=origem, recorrente=False, _quantity=randrange(10, 20))
+        novo = {'ano': origem.ano, 'mes': origem.mes + 1}
+        args = [str(origem), '%(ano)d/%(mes)d' % novo]
+        opts = {}
+        call_command('copiar', *args, **opts)
+        destino = models.Orcamento.objects.get(**novo)
+        self.assertIsNotNone(destino)
+        self.assertEquals(destino.contas.count(), qtd_recorrente)
+
+    def test_copiar_nao_copia_ultima_parcela(self):
+        origem = mommy.make(models.Orcamento)
+        qtd_recorrente = randrange(10, 20)
+        contas = mommy.make(models.Conta, orcamento=origem, recorrente=True, _quantity=qtd_recorrente)
+        mommy.make(models.Conta, orcamento=origem, recorrente=False, _quantity=randrange(10, 20))
+        mommy.make(models.Conta, orcamento=origem, recorrente=True, parcelas=3, parcela_atual=3)  # Não deve ser copiado
+        contas[0].parcelas = 3
+        contas[0].parcela = 1
+        contas[0].save()
+        novo = {'ano': origem.ano, 'mes': origem.mes + 1}
+        args = [str(origem), '%(ano)d/%(mes)d' % novo]
+        opts = {}
+        call_command('copiar', *args, **opts)
+        destino = models.Orcamento.objects.get(**novo)
+        self.assertIsNotNone(destino)
+        self.assertEquals(destino.contas.count(), qtd_recorrente)
