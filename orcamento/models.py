@@ -20,8 +20,8 @@ class Orcamento(models.Model):
         verbose_name = 'Orçamento'
         verbose_name_plural = 'Orçamentos'
         ordering = ['-ano', '-mes']
-    ano = models.IntegerField('Ano', blank=False, null=False)
-    mes = models.IntegerField('Mês', blank=False, null=False)
+    ano = models.PositiveIntegerField('Ano', blank=False, null=False)
+    mes = models.PositiveIntegerField('Mês', blank=False, null=False)
 
     @property
     def previsto(self):
