@@ -3,7 +3,7 @@ from datetime import date
 from django.views import generic
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.mixins import LoginRequiredMixin
+from core.views import BaseViewMixin
 
 
 class ListaAtualView(generic.RedirectView):
@@ -12,7 +12,7 @@ class ListaAtualView(generic.RedirectView):
         return reverse('compras:lista', kwargs={'ano': hoje.year, 'mes': hoje.month})
 
 
-class ListaView(LoginRequiredMixin, generic.DetailView):
+class ListaView(BaseViewMixin, generic.DetailView):
     template_name = 'lista-compras.html'
 
     def get_object(self, queryset=None):
