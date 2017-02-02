@@ -1,6 +1,6 @@
 from django.contrib import admin
 from compras.admin import MercadoInline
-import models
+from orcamento import models
 
 
 class ContaInline(admin.TabularInline):

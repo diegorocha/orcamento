@@ -1,4 +1,4 @@
-import models
+from orcamento import models
 
 
 def estatisticas_orcamento(orcamento):

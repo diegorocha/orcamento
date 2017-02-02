@@ -1,4 +1,4 @@
-import models
+from compras import models
 from datetime import date
 from django.views import generic
 from django.core.urlresolvers import reverse

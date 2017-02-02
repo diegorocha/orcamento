@@ -137,7 +137,7 @@ class ContaAdminTest(LoginRequiredMixin, TestCase):
         models.Conta.objects.filter(nome__startswith='Test').update(situacao=0)
         url = reverse('admin:orcamento_conta_changelist')
         data = {'action': 'acertar_situacao',
-                '_selected_action': [unicode(conta.pk) for conta in contas]}
+                '_selected_action': [str(conta.pk) for conta in contas]}
         response = self.client.post(url, data, follow=True)
         self.assertEquals(response.status_code, 200)
 

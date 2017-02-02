@@ -1,5 +1,5 @@
 from django.contrib import admin
-import models
+from compras import models
 
 
 class MercadoInline(admin.TabularInline):

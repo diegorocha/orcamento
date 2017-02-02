@@ -37,7 +37,6 @@ class ModelViewSetTestCase(APITestCase):
             response = self.client.get(self.endpoint)
             self.assertEquals(response.status_code, 200)
             data = response.json()
-            print data
             self.assertEquals(len(data), count)
 
     def test_create(self):
@@ -66,7 +65,6 @@ class ModelViewSetTestCase(APITestCase):
             data = response.json()
             new_data = self.update_data()
             data.update(new_data)
-            print data
             response = self.client.put(detail_endpoint, data, format='json')
             self.assertEquals(response.status_code, 200)
             updated_instance = self.model_name.objects.get(pk=instance.pk)
