@@ -1,9 +1,11 @@
 # coding: utf-8
 from __future__ import unicode_literals
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from orcamento.models import Orcamento
 
 
+@python_2_unicode_compatible
 class Mercado(models.Model):
     class Meta:
         verbose_name = 'Mercado'
@@ -21,10 +23,11 @@ class Mercado(models.Model):
     valor = models.DecimalField('Valor Atual', max_digits=8, decimal_places=2, )
     itens = models.IntegerField('Itens', blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return 'Mercado de %s' % (self.orcamento)
 
 
+@python_2_unicode_compatible
 class SecaoLista(models.Model):
     class Meta:
         verbose_name = 'Seção'
@@ -33,10 +36,11 @@ class SecaoLista(models.Model):
     descricao = models.CharField('Descrição', max_length=50)
     ordem = models.IntegerField('Ordem', blank=True, default=999)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.descricao
 
 
+@python_2_unicode_compatible
 class ItensLista(models.Model):
     class Meta:
         verbose_name = 'Item'
@@ -54,10 +58,11 @@ class ItensLista(models.Model):
         if self.quantidade_sugerida and self.unidade:
             return '%d %s' % (self.quantidade_sugerida, self.unidade)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.descricao
 
 
+@python_2_unicode_compatible
 class ListaCompras(models.Model):
     class Meta:
         verbose_name = 'Lista'
@@ -76,10 +81,11 @@ class ListaCompras(models.Model):
                 item_compra.comprado = False
                 item_compra.save()
 
-    def __unicode__(self):
+    def __str__(self):
         return 'Lista de compras de %s' % self.orcamento
 
 
+@python_2_unicode_compatible
 class ItemCompra(models.Model):
     class Meta:
         ordering = ('lista', 'item')
@@ -98,5 +104,5 @@ class ItemCompra(models.Model):
             return '%d %s' % (qtd, unidade)
         return self.item.quantidade
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s de %s' % (self.item, self.lista.orcamento)

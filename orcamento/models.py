@@ -5,6 +5,7 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
 
+@python_2_unicode_compatible
 class Categoria(models.Model):
     class Meta:
         verbose_name = 'Categoria'
@@ -12,7 +13,7 @@ class Categoria(models.Model):
         ordering = ['descricao']
     descricao = models.CharField('Descrição', max_length=50)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.descricao
 
 
@@ -62,6 +63,7 @@ class Orcamento(models.Model):
         return '%d/%d' % (self.ano, self.mes)
 
 
+@python_2_unicode_compatible
 class Conta(models.Model):
     class Meta:
         verbose_name = 'Conta'
@@ -103,5 +105,5 @@ class Conta(models.Model):
             self.recorrente = True
         super(Conta, self).save(*args, **kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s de %s' % (self.nome, self.orcamento)
