@@ -32,5 +32,5 @@ class OrcamentosView(BaseViewMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(OrcamentosView, self).get_context_data(**kwargs)
-        context['orcamentos'] = models.Orcamento.objects.all()
+        context['itens'] = models.Orcamento.objects.all()
         return context

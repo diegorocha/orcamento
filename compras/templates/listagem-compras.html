@@ -1,0 +1,15 @@
+{% extends "lista-orcamentos.html" %}
+{% load static %}
+{% load l10n %}
+
+{% block title %}<h2>Lista de Compras</h2>{% endblock %}
+
+{% block item_list %}
+<a href="{% url 'orcamento:orcamento' item.orcamento.ano item.orcamento.mes %}">
+    {{ item.orcamento }}
+</a>
+{% endblock %}
+
+{% block empty_list %}
+<span>Nenhuma lista cadastrada</span>
+{% endblock %}

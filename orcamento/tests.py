@@ -273,12 +273,12 @@ class ListaOrcamentoViewTest(LoginRequiredMixin, TestCase):
         url = reverse('orcamento:orcamentos')
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(response.context['orcamentos']), qtd_orcamento)
+        self.assertEquals(len(response.context['itens']), qtd_orcamento)
 
     def test_get_empty(self):
         empty_message = 'Nenhum orçamento cadastrado'.encode()
         url = reverse('orcamento:orcamentos')
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(response.context['orcamentos']), 0)
+        self.assertEquals(len(response.context['itens']), 0)
         self.assertIn(empty_message, response.content)

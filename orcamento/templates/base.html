@@ -59,10 +59,12 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Lista de Compras <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                     {% for lista in ultimas_listas %}
-                    <li><a href="{% url 'compras:lista' lista.orcamento.ano lista.orcamento.mes %}">{{ lista.orcamento.ano }}/{{ lista.orcamento.mes }}</a></li>
+                    <li><a href="{% url 'compras:lista' lista.orcamento.ano lista.orcamento.mes %}">{{ lista.orcamento }}</a></li>
                     {% empty %}
                     <li><a href="#">Nenhuma lista disponível</a></li>
                     {% endfor %}
+                    <li role="separator" class="divider"></li>
+                    <li><a href="{% url 'compras:listas' %}">Todas</a></li>
                     </ul>
                 </li>
             </ul>

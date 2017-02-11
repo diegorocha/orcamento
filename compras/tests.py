@@ -1,4 +1,5 @@
 from datetime import date
+from random import randrange
 from model_mommy import mommy
 from django.test import TestCase
 from orcamento.models import Orcamento
@@ -96,3 +97,21 @@ class ItemCompraTest(TestCase):
         item = mommy.make(ItemCompra)
         quantidade_str = '%d %s' % (item.item.quantidade_sugerida, item.item.unidade)
         self.assertEquals(item.quantidade, quantidade_str)
+
+
+class ListaComprasViewTest(LoginRequiredMixin, TestCase):
+    def test_get(self):
+        qtd= randrange(13, 20)
+        mommy.make(ListaCompras, _quantity=qtd)
+        url = reverse('compras:listas')
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.context['itens']), qtd)
+
+    def test_get_empty(self):
+        empty_message = 'Nenhuma lista cadastrada'.encode()
+        url = reverse('compras:listas')
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.context['itens']), 0)
+        self.assertIn(empty_message, response.content)
