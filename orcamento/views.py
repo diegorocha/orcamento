@@ -25,3 +25,12 @@ class EstatisticaView(BaseViewMixin, generic.TemplateView):
 
 class AjustarCategoriasView(BaseViewMixin, generic.TemplateView):
     template_name = 'ajustar-contas-sem-categoria.html'
+
+
+class OrcamentosView(BaseViewMixin, generic.TemplateView):
+    template_name = 'lista-orcamentos.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(OrcamentosView, self).get_context_data(**kwargs)
+        context['orcamentos'] = models.Orcamento.objects.all()
+        return context

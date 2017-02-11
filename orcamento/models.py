@@ -60,7 +60,7 @@ class Orcamento(models.Model):
         return value.get('valor__sum') or 0
 
     def __str__(self):
-        return '%d/%d' % (self.ano, self.mes)
+        return '%04d/%02d' % (self.ano, self.mes)
 
 
 @python_2_unicode_compatible

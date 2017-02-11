@@ -37,6 +37,8 @@
                     {% empty %}
                     <li><a href="#">Nenhum orçamento disponível</a></li>
                     {% endfor %}
+                    <li role="separator" class="divider"></li>
+                    <li><a href="{% url 'orcamento:orcamentos' %}">Todos</a></li>
                   </ul>
                 </li>
             </ul>

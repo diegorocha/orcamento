@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+{% load l10n %}
+{% block content %}
+    <div class="col-sm-8 col-sm-offset-2">
+        <h3>
+        {% for orcamento in orcamentos %}
+            <div class="item-lista-orcamento">
+                <span class="label label-primary">
+                    <a href="{% url 'orcamento:orcamento' orcamento.ano orcamento.mes %}">
+                        {{ orcamento }}
+                    </a>
+                </span>
+            </div>
+        {% empty %}
+            <span>Nenhum orçamento cadastrado</span>
+        {% endfor %}
+        </h3>
+    </div>
+{% endblock %}

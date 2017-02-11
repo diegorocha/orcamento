@@ -264,3 +264,21 @@ class CopiarTest(TestCase):
         destino = models.Orcamento.objects.get(**novo)
         self.assertIsNotNone(destino)
         self.assertEquals(destino.contas.count(), qtd_recorrente)
+
+
+class ListaOrcamentoViewTest(LoginRequiredMixin, TestCase):
+    def test_get(self):
+        qtd_orcamento = randrange(13, 20)
+        mommy.make(models.Orcamento, _quantity=qtd_orcamento)
+        url = reverse('orcamento:orcamentos')
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.context['orcamentos']), qtd_orcamento)
+
+    def test_get_empty(self):
+        empty_message = 'Nenhum orçamento cadastrado'.encode()
+        url = reverse('orcamento:orcamentos')
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.context['orcamentos']), 0)
+        self.assertIn(empty_message, response.content)
