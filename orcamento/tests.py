@@ -1,4 +1,5 @@
 # coding=utf-8
+from __future__ import unicode_literals
 from datetime import date
 from random import randrange
 
@@ -276,7 +277,7 @@ class ListaOrcamentoViewTest(LoginRequiredMixin, TestCase):
         self.assertEquals(len(response.context['itens']), qtd_orcamento)
 
     def test_get_empty(self):
-        empty_message = 'Nenhum orçamento cadastrado'.encode()
+        empty_message = u'Nenhum orçamento cadastrado'.encode('utf-8')
         url = reverse('orcamento:orcamentos')
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
