@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'django_nose',
     'orcamento',
     'compras',
+    'cartao',
 ]
 
 MIDDLEWARE_CLASSES = [
