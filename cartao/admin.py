@@ -20,3 +20,4 @@ class CompraCartaoInline(admin.TabularInline):
 @admin.register(models.Fatura)
 class FaturaAdmin(admin.ModelAdmin):
     inlines = [CompraCartaoInline]
+    readonly_fields = ['valor_inicial']
