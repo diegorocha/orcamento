@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from django.views import generic
 
-# Create your views here.
+from cartao import models
+from core.views import BaseViewMixin
+
+
+class CadastrarCompraCartaoView(BaseViewMixin, generic.TemplateView):
+    template_name = 'cadastrar-compra-cartao.html'

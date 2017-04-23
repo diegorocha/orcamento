@@ -1,5 +1,6 @@
 from django.contrib import admin
 from rest_framework import routers
+from cartao import api as api_cartao
 from compras import api as api_compras
 from orcamento import api as api_orcamento
 from django.conf.urls import url, include
@@ -14,6 +15,9 @@ router.register(r'compras/mercado', api_compras.MercadoViewSet)
 router.register(r'compras/secao', api_compras.SecaoListaViewSet)
 router.register(r'compras/itens', api_compras.ItensListaViewSet)
 router.register(r'compras/itens-compra', api_compras.ItemCompraViewSet)
+router.register(r'cartao/cartao', api_cartao.CartaoViewset)
+router.register(r'cartao/fatura', api_cartao.FaturaViewset)
+router.register(r'cartao/compra', api_cartao.CompraCartaoViewset)
 
 
 urlpatterns = [
@@ -23,5 +27,6 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/', include(router.urls, namespace='api')),
     url(r'^compras/', include('compras.urls', namespace='compras')),
+    url(r'^cartao/', include('cartao.urls', namespace='cartao')),
     url(r'', include('orcamento.urls', namespace='orcamento')),
 ]
