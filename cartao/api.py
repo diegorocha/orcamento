@@ -29,6 +29,11 @@ class FaturaRetrieveSerializer(FaturaSerializer):
 
 
 class CompraCartaoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CompraCartao
+
+
+class CompraCartaoFullSerializer(CompraCartaoSerializer):
     fatura = FaturaSerializer()
     class Meta:
         model = models.CompraCartao
@@ -55,4 +60,8 @@ class FaturaViewset(viewsets.ModelViewSet):
 class CompraCartaoViewset(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = models.CompraCartao.objects.all().order_by('-id')
-    serializer_class = CompraCartaoSerializer
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            return CompraCartaoSerializer
+        return CompraCartaoFullSerializer
