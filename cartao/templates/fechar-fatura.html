@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load l10n %}
+
+{% block content %}
+    <div class="col-md-6 col-md-offset-3">
+        <form class="form-horizontal">
+            <fieldset>
+                <legend class="text-center">Fechar Fatura</legend>
+
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="fatura">Fatura</label>
+                  <div class="col-md-7">
+                    <select id="fatura" name="fatura" class="form-control">
+                        {% for fatura in faturas %}
+                        <option value="{{ fatura.id }}">{{ fatura }}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="valor_final">Valor Final</label>
+                  <div class="col-md-4">
+                  <input id="valor_final" name="valor_final" placeholder="R$" class="form-control input-md" type="number" step="0.01" min="0">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="orcamento">Nova Fatura</label>
+                  <div class="col-md-7">
+                    <select id="orcamento" name="orcamento" class="form-control">
+                        {% for orcamento in orcamentos %}
+                        <option value="{{ orcamento.id }}">{{ orcamento }}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="btnOk"></label>
+                  <div class="col-md-4">
+                    <button id="btnOk" name="btnOk" class="btn btn-success">Salvar</button>
+                  </div>
+                </div>
+
+            </fieldset>
+        </form>
+        <div class="alert alert-success" id="sucesso" style="display: none" role="alert">
+            <strong>Sucesso!</strong> Fatura fechada com sucesso.
+        </div>
+        <div class="alert alert-danger" id="erro" style="display: none" role="alert">
+            <strong>Erro!</strong> <span>Não foi possível fechar a fatura.</span>
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+<script src="{% static 'js/fechar-fatura.js' %}"></script>
+{% endblock %}

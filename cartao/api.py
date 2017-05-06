@@ -1,8 +1,14 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework import viewsets
+from rest_framework.decorators import detail_route
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from cartao import models
+from cartao.utils import fechar_fatura
+from orcamento.models import Orcamento
 
 
 class BandeiraSerializer(serializers.ModelSerializer):
@@ -55,6 +61,18 @@ class FaturaViewset(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = models.Fatura.objects.all().order_by('orcamento', 'cartao')
     serializer_class = FaturaSerializer
+
+    @detail_route(methods=['post'])
+    def fechar(self, request, pk=None):
+        fatura = get_object_or_404(self.queryset, pk=pk)
+        valor_final = request.POST.get('valor_final')
+        orcamento = Orcamento.objects.filter(pk=request.data.get('orcamento')).first()
+        if not orcamento:
+            raise ValidationError('Orçamento não encontrado')
+        try:
+            return Response(self.serializer_class(fechar_fatura(fatura, orcamento, valor_final)).data)
+        except Exception as ex:
+            return Response(dict(error=str(ex)))
 
 
 class CompraCartaoViewset(viewsets.ModelViewSet):

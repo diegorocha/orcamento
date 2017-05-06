@@ -52,6 +52,7 @@
                         <li><a href="{% url 'admin:index' %}">Admin</a></li>
                         <li><a href="{% url 'orcamento:ajustar-categorias' %}">Ajustar Categorias</a></li>
                         <li><a href="{% url 'cartao:cadastrar-compra' %}">Nova compra com cartão</a></li>
+                        <li><a href="{% url 'cartao:fechar-fatura' %}">Fechar Fatura</a></li>
                     </ul>
                 </li>
             </ul>
@@ -92,6 +93,7 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="{% static 'js/base.js' %}"></script>
     {% block custom_js %}
     {% endblock %}
   </body>
