@@ -20,4 +20,6 @@ class CompraCartaoInline(admin.TabularInline):
 @admin.register(models.Fatura)
 class FaturaAdmin(admin.ModelAdmin):
     inlines = [CompraCartaoInline]
+    list_display = ['__str__', 'valor_inicial', 'valor_final', 'aberta']
+    list_filter = ['cartao', 'aberta']
     readonly_fields = ['valor_inicial']

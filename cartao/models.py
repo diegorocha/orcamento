@@ -1,4 +1,5 @@
 # coding: utf-8
+from django.core.exceptions import ValidationError
 from django.db import models
 from orcamento.models import Orcamento, Categoria
 from django.utils.encoding import python_2_unicode_compatible
@@ -35,6 +36,8 @@ class Fatura(models.Model):
         verbose_name_plural = 'Faturas'
     cartao = models.ForeignKey(Cartao, on_delete=models.CASCADE, related_name='faturas')
     orcamento = models.ForeignKey(Orcamento, on_delete=models.CASCADE, related_name='faturas')
+    aberta = models.BooleanField('Aberta', blank=True, default=True)
+    valor_final = models.DecimalField('Valor Final', max_digits=8, decimal_places=2, blank=True, null=True)
 
     @property
     def valor_inicial(self):
@@ -66,6 +69,8 @@ class CompraCartao(models.Model):
     def save(self, *args, **kwargs):
         if not self.valor_inicial:
             self.valor_inicial = self.valor_real
+        if self.fatura and not self.fatura.aberta:
+            raise ValidationError('Fatura %s já está fechada' % self.fatura)
         super(CompraCartao, self).save(*args, **kwargs)
 
     def __str__(self):
