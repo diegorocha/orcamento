@@ -21,5 +21,5 @@ class CompraCartaoInline(admin.TabularInline):
 class FaturaAdmin(admin.ModelAdmin):
     inlines = [CompraCartaoInline]
     list_display = ['__str__', 'valor_inicial', 'valor_final', 'aberta']
-    list_filter = ['cartao', 'aberta']
+    list_filter = ['cartao', 'aberta', 'orcamento']
     readonly_fields = ['valor_inicial']
