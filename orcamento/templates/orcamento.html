@@ -54,13 +54,17 @@
             <tr>
                 <th>Cartão</th>
                 <th>Valor Inicial</th>
+                <th>Valor Final</th>
+                <th>&nbsp;</th>
             </tr>
         </thead>
         <tbody>
         {% for fatura in object.faturas.all %}
             <tr>
-                <td><a href="{% url 'admin:cartao_fatura_change' fatura.id %}">{{ fatura.cartao }}</a></td>
-                <td><a href="{% url 'admin:cartao_fatura_change' fatura.id %}">{{ fatura.valor_inicial }}</a></td>
+                <td>{{ fatura.cartao }}</td>
+                <td>{{ fatura.valor_inicial|default_if_none:"0" }}</td>
+                <td>{{ fatura.valor_final|default_if_none:"" }}</td>
+                <td><a href="{% url 'admin:cartao_fatura_change' fatura.id %}"><span class="edit glyphicon glyphicon-pencil"></span></a></td>
             </tr>
         {% empty %}
             <tr>
