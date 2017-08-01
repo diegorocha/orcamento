@@ -40,6 +40,10 @@ class Fatura(models.Model):
     valor_final = models.DecimalField('Valor Final', max_digits=8, decimal_places=2, blank=True, null=True)
 
     @property
+    def descricao(self):
+        return '%s %s' % (self.cartao.descricao, self.orcamento)
+
+    @property
     def valor_inicial(self):
         value = self.compras.aggregate(models.Sum('valor_inicial'))
         return value.get('valor_inicial__sum') or 0

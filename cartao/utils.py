@@ -4,6 +4,39 @@ from django.db.models import F, Q
 from cartao.models import Fatura, CompraCartao
 
 
+def _incrementa_parcela(compra, n=1):
+    if compra:
+        if compra.parcelas > 1:
+            compra.parcela_atual += n
+            if compra.parcela_atual > compra.parcelas:
+                return
+    return compra
+
+
+def get_queryset_proxima_fatura(queryset):
+    if queryset:
+        return queryset.filter(Q(recorrente=True) | Q(parcelas__gt=1, parcela_atual__lt=F('parcelas')))
+
+
+def get_compras_proxima_fatura(queryset, n=1, incluir_totais=False):
+    if queryset:
+        compras = []
+        totais = dict(valor_real=0, valor_dolar=0, valor_fatura=0)
+        for compra in get_queryset_proxima_fatura(queryset):
+            nova_compra = _incrementa_parcela(compra, n)
+            if nova_compra:
+                compras.append(nova_compra)
+                try:
+                    totais['valor_real'] += nova_compra.valor_real
+                    totais['valor_dolar'] += nova_compra.valor_dolar
+                    totais['valor_fatura'] += nova_compra.valor_fatura
+                except:
+                    pass
+        if incluir_totais:
+            return compras, totais
+        return compras
+
+
 def fechar_fatura(fatura, orcamento, valor_final=None):
     if not fatura.aberta:
         raise Exception('Fatura já está fechada')
@@ -11,7 +44,7 @@ def fechar_fatura(fatura, orcamento, valor_final=None):
         fatura.valor_final = valor_final
     nova_fatura = Fatura(cartao=fatura.cartao, orcamento=orcamento)
     nova_fatura.save()
-    for compra in fatura.compras.filter(Q(recorrente=True) | Q(parcelas__gt=1, parcela_atual__lt=F('parcelas'))):
+    for compra in get_compras_proxima_fatura(fatura.compras):
         nova_compra = CompraCartao()
         nova_compra.fatura = nova_fatura
         nova_compra.descricao = compra.descricao

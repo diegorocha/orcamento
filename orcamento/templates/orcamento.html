@@ -64,7 +64,7 @@
                 <td>{{ fatura.cartao }}</td>
                 <td>{{ fatura.valor_inicial|default_if_none:"0" }}</td>
                 <td>{{ fatura.valor_final|default_if_none:"" }}</td>
-                <td><a href="{% url 'admin:cartao_fatura_change' fatura.id %}"><span class="edit glyphicon glyphicon-pencil"></span></a></td>
+                <td><a href="{% url 'cartao:fatura' fatura.id %}"><span class="edit glyphicon glyphicon-pencil"></span></a></td>
             </tr>
         {% empty %}
             <tr>

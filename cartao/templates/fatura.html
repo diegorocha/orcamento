@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load l10n %}
+
+{% block content %}
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Descrição</th>
+                <th>Valor R$</th>
+                <th>Valor US$</th>
+                <th>Valor Fatura</th>
+                <th>Categoria</th>
+                <th>Parcelamento</th>
+                <th>Recorrente</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for compra in object_list %}
+            <tr>
+                <td>{{ compra.descricao }}</td>
+                <td>{{ compra.valor_real|default_if_none:"" }}</td>
+                <td>{{ compra.valor_dolar|default_if_none:"" }}</td>
+                <td>{{ compra.valor_fatura|default_if_none:"" }}</td>
+                <td>{{ compra.categoria }}</td>
+                <td>
+                    {% if compra.parcelas == 1 %}
+                        <span>A vista</span>
+                    {% else %}
+                        <span>Parcela {{ compra.parcela_atual }}/{{ compra.parcelas }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ compra.recorrente|yesno:"Sim,Não" }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="7">Nenhuma compra nessa fatura</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Total</th>
+                <th>{{ view.detalhes_fatura.total.valor_real|default_if_none:"" }}</th>
+                <th>{{ view.detalhes_fatura.total.valor_dolar|default_if_none:"" }}</th>
+                <th>{{ view.detalhes_fatura.total.valor_fatura|default_if_none:"" }}</th>
+                <th colspan="3"></th>
+            </tr>
+        </tfoot>
+    </table>
+
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Parcelamento</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>A Vista</td>
+                <td>{{ view.parcelamento.a_vista.valor_real }}</td>
+            </tr>
+            <tr>
+                <td>Parcelado</td>
+                <td>{{ view.parcelamento.a_prazo.valor_real }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Descrição</th>
+                <th>Valor R$</th>
+                <th>Valor US$</th>
+                <th>Valor Fatura</th>
+                <th>Categoria</th>
+                <th>Parcelamento</th>
+                <th>Recorrente</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for compra in view.proxima_fatura.compras %}
+            <tr>
+                <td>{{ compra.descricao }}</td>
+                <td>{{ compra.valor_real|default_if_none:"" }}</td>
+                <td>{{ compra.valor_dolar|default_if_none:"" }}</td>
+                <td>{{ compra.valor_fatura|default_if_none:"" }}</td>
+                <td>{{ compra.categoria }}</td>
+                <td>
+                    {% if compra.parcelas == 1 %}
+                        <span>A vista</span>
+                    {% else %}
+                        <span>Parcela {{ compra.parcela_atual }}/{{ compra.parcelas }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ compra.recorrente|yesno:"Sim,Não" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Total</th>
+                <th>{{ view.proxima_fatura.total.valor_real|default_if_none:"" }}</th>
+                <th>{{ view.proxima_fatura.total.valor_dolar|default_if_none:"" }}</th>
+                <th>{{ view.proxima_fatura.total.valor_fatura|default_if_none:"" }}</th>
+                <th colspan="3"></th>
+            </tr>
+        </tfoot>
+    </table>
+
+{% endblock %}
+
+{#{% block custom_js %}#}
+{#<script src="{% static 'js/fechar-fatura.js' %}"></script>#}
+{#{% endblock %}#}
