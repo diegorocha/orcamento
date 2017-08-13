@@ -4,6 +4,8 @@
 {% load l10n %}
 
 {% block content %}
+    <h2>{{ view.fatura }}</h2>
+
     <table class="table table-bordered table-striped table-hover">
         <thead>
             <tr>
@@ -42,9 +44,9 @@
         <tfoot>
             <tr>
                 <th>Total</th>
-                <th>{{ view.detalhes_fatura.total.valor_real|default_if_none:"" }}</th>
-                <th>{{ view.detalhes_fatura.total.valor_dolar|default_if_none:"" }}</th>
-                <th>{{ view.detalhes_fatura.total.valor_fatura|default_if_none:"" }}</th>
+                <th>{{ view.total.valor_real|default_if_none:"" }}</th>
+                <th>{{ view.total.valor_dolar|default_if_none:"" }}</th>
+                <th>{{ view.total.valor_fatura|default_if_none:"" }}</th>
                 <th colspan="3"></th>
             </tr>
         </tfoot>

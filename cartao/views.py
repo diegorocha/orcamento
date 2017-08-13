@@ -33,12 +33,11 @@ class FaturaView(BaseViewMixin, ListView):
     template_name = 'fatura.html'
 
     def dispatch(self, request, *args, **kwargs):
-        fatura = get_object_or_404(models.Fatura, id=self.kwargs['fatura_id'])
-        self.fatura_id = fatura.id
+        self.fatura = get_object_or_404(models.Fatura, id=self.kwargs['fatura_id'])
         return super(FaturaView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        return models.CompraCartao.objects.filter(fatura__id=self.fatura_id)
+        return models.CompraCartao.objects.filter(fatura=self.fatura)
 
     @property
     def proxima_fatura(self):
