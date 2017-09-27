@@ -1,3 +1,5 @@
+from sys import stdout
+
 from orcamento import models
 
 
@@ -63,3 +65,40 @@ def estatisticas_total():
         data['data'][0]['data'].append(orcamento.previsto)
         data['data'][1]['data'].append(orcamento.atual)
     return data
+
+
+def copiar_orcamento(origem, destino, forcar=False, out=None):
+    ano_origem, mes_origem = origem.split('/')
+    ano_destino, mes_destino = destino.split('/')
+    if not out:
+        out = stdout
+    orcamento_origem = models.Orcamento.objects.filter(ano=ano_origem, mes=mes_origem).first()
+    if not orcamento_origem:
+        return False, 'Orçamento "%s" não encontrado' % origem
+    contas = models.Conta.objects.filter(orcamento__ano=ano_origem, orcamento__mes=mes_origem, recorrente=True)
+    orcamento_destino = models.Orcamento.objects.filter(ano=ano_destino, mes=mes_destino).first()
+    contas_destino = models.Conta.objects.filter(orcamento__ano=ano_destino, orcamento__mes=mes_destino).count()
+    if contas_destino == 0 or forcar:
+        if not orcamento_destino:
+            orcamento_destino = models.Orcamento()
+            orcamento_destino.ano = int(ano_destino)
+            orcamento_destino.mes = int(mes_destino)
+            orcamento_destino.save()
+        out.write('Copiando contas de %s para %s' % (orcamento_origem, orcamento_destino))
+        for conta in contas:
+            if conta.parcelas == 1 or conta.parcela_atual < conta.parcelas:
+                nova_conta = models.Conta()
+                nova_conta.orcamento = orcamento_destino
+                nova_conta.nome = conta.nome
+                nova_conta.descricao = conta.descricao
+                nova_conta.previsto = conta.previsto
+                nova_conta.categoria = conta.categoria
+                if conta.parcelas > 1:
+                    nova_conta.parcela_atual = conta.parcela_atual + 1
+                nova_conta.parcelas = conta.parcelas
+                nova_conta.recorrente = conta.recorrente
+                nova_conta.save()
+                out.write('%s inserido.' % nova_conta)
+        return True, None
+    else:
+        return False, 'Orçamento "%s" já possui contas' % orcamento_destino
