@@ -1,4 +1,4 @@
-import models
+from orcamento import models
 
 
 def estatisticas_orcamento(orcamento):
@@ -46,7 +46,7 @@ def estatisticas_mercado():
             'data': [{'name': 'Principal', 'data': []},
                      {'name': 'Outros', 'data': []}]
            }
-    for orcamento in models.Orcamento.objects.filter(mercados__isnull=False).distinct().order_by('-ano', '-mes')[:12].reverse():
+    for orcamento in models.Orcamento.objects.filter(mercados__isnull=False).distinct()[:12:-1]:
         data['eixos'].append(str(orcamento))
         data['data'][0]['data'].append(orcamento.mercado_principal)
         data['data'][1]['data'].append(orcamento.mercado_outros)
@@ -58,7 +58,7 @@ def estatisticas_total():
             'data': [{'name': 'Previsto', 'data': []},
                      {'name': 'Final', 'data': []}]
            }
-    for orcamento in models.Orcamento.objects.order_by('-ano', '-mes')[:12].reverse():
+    for orcamento in models.Orcamento.objects.all()[:12:-1]:
         data['eixos'].append(str(orcamento))
         data['data'][0]['data'].append(orcamento.previsto)
         data['data'][1]['data'].append(orcamento.atual)

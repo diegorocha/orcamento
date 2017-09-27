@@ -1,5 +1,5 @@
 from django.contrib import admin
-import models
+from compras import models
 
 
 class MercadoInline(admin.TabularInline):
@@ -14,7 +14,7 @@ class ItemCompraInline(admin.TabularInline):
 
 @admin.register(models.Mercado)
 class MercadoAdmin(admin.ModelAdmin):
-    list_display = ['__unicode__', 'tipo', 'valor']
+    list_display = ['__str__', 'tipo', 'valor']
 
 
 @admin.register(models.SecaoLista)

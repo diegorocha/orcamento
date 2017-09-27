@@ -1,6 +1,6 @@
 from django.contrib import admin
 from compras.admin import MercadoInline
-import models
+from orcamento import models
 
 
 class ContaInline(admin.TabularInline):
@@ -17,7 +17,7 @@ class CategoriaAdmin(admin.ModelAdmin):
 class OrcamentoAdmin(admin.ModelAdmin):
     list_filter = ['ano']
     inlines = [ContaInline, MercadoInline]
-    list_display = ['__unicode__', 'previsto', 'atual', 'a_pagar', 'mercado_principal']
+    list_display = ['__str__', 'previsto', 'atual', 'a_pagar', 'mercado_principal']
 
 
 @admin.register(models.Conta)

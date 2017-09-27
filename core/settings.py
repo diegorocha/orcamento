@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'django_nose',
     'orcamento',
     'compras',
+    'cartao',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -56,7 +57,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
-    'default': config('DATABASE_URL', cast=db_url)
+    'default': config('DATABASE_URL', cast=db_url, default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'))
 }
 
 if 'test' in sys.argv or 'test_coverage' in sys.argv:  # Covers regular testing and django-coverage
@@ -85,7 +86,7 @@ USE_L10N = True
 USE_TZ = True
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*')
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
 
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = config('STATIC_URL', default='/static/')
@@ -108,6 +109,7 @@ REST_FRAMEWORK = {
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 ADMINS = ((config('ADMIN_NAME'), config('ADMIN_EMAIL')), )
+SERVER_EMAIL = config('SERVER_EMAIL', default='root@localhost')
 
 if config('USE_SMTP', default=False, cast=bool):
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -124,11 +126,5 @@ else:
 # Security Headers
 X_FRAME_OPTIONS = 'DENY'
 if not DEBUG:
-    CSRF_COOKIE_SECURE = True
-    CSRF_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_SECURE = True
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_SECONDS = 15768000
-    SECURE_SSL_REDIRECT = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_BROWSER_XSS_FILTER = True

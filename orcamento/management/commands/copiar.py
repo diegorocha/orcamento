@@ -37,16 +37,18 @@ class Command(BaseCommand):
                 orcamento_destino.save()
             self.stdout.write('Copiando contas de %s para %s' % (orcamento_origem, orcamento_destino))
             for conta in contas:
-                nova_conta = models.Conta()
-                nova_conta.orcamento = orcamento_destino
-                nova_conta.nome = conta.nome
-                nova_conta.descricao = conta.descricao
-                nova_conta.previsto = conta.previsto
-                nova_conta.categoria = conta.categoria
-                if conta.parcelas > 1:
-                    nova_conta.parcela_atual = conta.parcela_atual + 1
-                nova_conta.parcelas = conta.parcelas
-                nova_conta.save()
-                self.stdout.write('%s inserido.' % nova_conta)
+                if conta.parcelas == 1 or conta.parcela_atual < conta.parcelas:
+                    nova_conta = models.Conta()
+                    nova_conta.orcamento = orcamento_destino
+                    nova_conta.nome = conta.nome
+                    nova_conta.descricao = conta.descricao
+                    nova_conta.previsto = conta.previsto
+                    nova_conta.categoria = conta.categoria
+                    if conta.parcelas > 1:
+                        nova_conta.parcela_atual = conta.parcela_atual + 1
+                    nova_conta.parcelas = conta.parcelas
+                    nova_conta.recorrente = conta.recorrente
+                    nova_conta.save()
+                    self.stdout.write('%s inserido.' % nova_conta)
         else:
             raise CommandError('Orçamento "%s" já possui contas. Use -f para forçar' % orcamento_destino)

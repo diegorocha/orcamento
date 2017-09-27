@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% load l10n %}
+{% block content %}
+    <div class="col-sm-8 col-sm-offset-2">
+        {% block title %}<h2>Lista de Orçamentos</h2>{% endblock %}
+        <h3>
+        {% for item in itens %}
+            <div class="item-lista-orcamento">
+                <span class="label label-primary">
+                    {% block item_list %}
+                    <a href="{% url 'orcamento:orcamento' item.ano item.mes %}">
+                        {{ item }}
+                    </a>
+                    {% endblock %}
+                </span>
+            </div>
+        {% empty %}
+            {% block empty_list %}
+            <span>Nenhum orçamento cadastrado</span>
+            {% endblock %}
+        {% endfor %}
+        </h3>
+    </div>
+{% endblock %}

@@ -1,5 +1,5 @@
-import utils
-import models
+from orcamento import utils
+from orcamento import models
 from django.http import Http404
 from rest_framework import viewsets
 from rest_framework import serializers
@@ -9,23 +9,17 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import detail_route, list_route
 
 
-class OrcamentoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Orcamento
-
-
 class ContaSerializer(serializers.ModelSerializer):
-    orcamento = serializers.StringRelatedField()
-
     class Meta:
         model = models.Conta
         read_only_fields = ('a_pagar',)
 
 
-class ContaSerializerCreate(serializers.ModelSerializer):
+class OrcamentoSerializer(serializers.ModelSerializer):
+    contas = ContaSerializer(many=True, read_only=True)
 
     class Meta:
-        model = models.Conta
+        model = models.Orcamento
 
 
 class CategoriaSerializer(serializers.ModelSerializer):
@@ -59,11 +53,7 @@ class OrcamentoViewSet(viewsets.ModelViewSet):
 class ContaViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = models.Conta.objects.all()
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return ContaSerializerCreate
-        return ContaSerializer
+    serializer_class = ContaSerializer
 
     @list_route()
     def sem_categoria(self, request):

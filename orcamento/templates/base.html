@@ -25,20 +25,66 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{% url 'orcamento:orcamento_atual' %}">Orçamento Atual</a></li>
+            <a class="navbar-brand" href="{% url 'orcamento:orcamento_atual' %}">Orçamento</a></li>
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-              <li><a href="{% url 'admin:index' %}">Admin</a></li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Orçamentos <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    {% for orcamento in ultimos_orcamentos %}
+                    <li><a href="{% url 'orcamento:orcamento' orcamento.ano orcamento.mes %}">{{ orcamento }}</a></li>
+                    {% empty %}
+                    <li><a href="#">Nenhum orçamento disponível</a></li>
+                    {% endfor %}
+                    <li role="separator" class="divider"></li>
+                    <li><a href="{% url 'orcamento:orcamentos' %}">Todos</a></li>
+                  </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cartões <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    {% for orcamento in ultimos_orcamentos %}
+                        {% for fatura in orcamento.faturas.all %}
+                            <li><a href="{% url 'cartao:fatura' fatura.id %}">{{ fatura.descricao }}</a></li>
+                        {% endfor %}
+                    <li role="separator" class="divider"></li>
+                    {% empty %}
+                    <li><a href="#">Nenhuma fatura disponível</a></li>
+                    {% endfor %}
+                    <li><a href="#">Compras Parceladas</a></li>
+                  </ul>
+                </li>
             </ul>
             <ul class="nav navbar-nav">
               <li><a href="{% url 'orcamento:estatistica' %}">Estatísticas</a></li>
             </ul>
             <ul class="nav navbar-nav">
-              <li><a href="{% url 'orcamento:ajustar-categorias' %}">Ajustar Categorias</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Ajustes <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'admin:index' %}">Admin</a></li>
+                        <li><a href="{% url 'orcamento:ajustar-categorias' %}">Ajustar Categorias</a></li>
+                        <li><a href="{% url 'cartao:cadastrar-compra' %}">Nova compra com cartão</a></li>
+                        <li><a href="{% url 'cartao:fechar-fatura' %}">Fechar Fatura</a></li>
+                    </ul>
+                </li>
             </ul>
             <ul class="nav navbar-nav">
-              <li><a href="{% url 'compras:lista-atual' %}">Lista de Compras</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Lista de Compras <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                    {% for lista in ultimas_listas %}
+                    <li><a href="{% url 'compras:lista' lista.orcamento.ano lista.orcamento.mes %}">{{ lista.orcamento }}</a></li>
+                    {% empty %}
+                    <li><a href="#">Nenhuma lista disponível</a></li>
+                    {% endfor %}
+                    <li role="separator" class="divider"></li>
+                    <li><a href="{% url 'compras:listas' %}">Todas</a></li>
+                    </ul>
+                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li class="dropdown">
@@ -63,6 +109,7 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="{% static 'js/base.js' %}"></script>
     {% block custom_js %}
     {% endblock %}
   </body>

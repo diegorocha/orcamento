@@ -17,3 +17,12 @@ td input {
     text-decoration: line-through;
     font-weight: normal !important;
 }
+.item-lista-orcamento{
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.item-lista-orcamento a {
+    color: inherit;
+    text-decoration: none;
+}
