@@ -55,9 +55,8 @@ def fechar_fatura(fatura, orcamento, valor_final=None):
         nova_compra.valor_final = compra.valor_final
         nova_compra.categoria = compra.categoria
         nova_compra.recorrente = compra.recorrente
-        if compra.parcelas > 1:
-            nova_compra.parcela_atual = compra.parcela_atual + 1
-            nova_compra.parcelas = compra.parcelas
+        nova_compra.parcela_atual = compra.parcela_atual
+        nova_compra.parcelas = compra.parcelas
         nova_compra.save()
     fatura.aberta = False
     fatura.save()
