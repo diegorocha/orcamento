@@ -55,6 +55,8 @@
                     <li><a href="#">Nenhuma fatura disponível</a></li>
                     {% endfor %}
                     <li><a href="#">Compras Parceladas</a></li>
+                    <li><a href="{% url 'cartao:cadastrar-compra' %}">Nova compra com cartão</a></li>
+                    <li><a href="{% url 'cartao:fechar-fatura' %}">Fechar Fatura</a></li>
                   </ul>
                 </li>
             </ul>
@@ -67,8 +69,6 @@
                     <ul class="dropdown-menu">
                         <li><a href="{% url 'admin:index' %}">Admin</a></li>
                         <li><a href="{% url 'orcamento:ajustar-categorias' %}">Ajustar Categorias</a></li>
-                        <li><a href="{% url 'cartao:cadastrar-compra' %}">Nova compra com cartão</a></li>
-                        <li><a href="{% url 'cartao:fechar-fatura' %}">Fechar Fatura</a></li>
                     </ul>
                 </li>
             </ul>
