@@ -2,9 +2,10 @@ from django.db.models.aggregates import Sum
 from django.shortcuts import get_object_or_404
 from django.views import generic
 from django.views.generic.list import ListView
+from simplejson import dumps
 
 from cartao import models
-from cartao.utils import get_compras_proxima_fatura, get_queryset_proxima_fatura
+from cartao.utils import get_compras_proxima_fatura, get_queryset_proxima_fatura, estatistica_fatura
 from core.views import BaseViewMixin
 from orcamento.models import Categoria, Orcamento
 
@@ -58,3 +59,8 @@ class FaturaView(BaseViewMixin, ListView):
         data['a_vista'] = queryset.filter(parcelas=1).aggregate(valor_real=Sum('valor_real'))
         data['a_prazo'] = queryset.filter(parcelas__gte=2).aggregate(valor_real=Sum('valor_real'))
         return data
+
+    @property
+    def estatistica(self):
+        estatistica = estatistica_fatura(self.fatura)
+        return dumps(estatistica)
