@@ -1,3 +1,4 @@
+# coding: utf-8
 from sys import stdout
 
 from orcamento import models
