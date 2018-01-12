@@ -1,3 +1,4 @@
+# coding: utf-8
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 from compras.models import ListaCompras
