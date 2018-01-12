@@ -7,7 +7,7 @@ from orcamento.models import Orcamento
 class UltimosOrcamentosMixin(object):
     def get_context_data(self, **kwargs):
         context = super(UltimosOrcamentosMixin, self).get_context_data(**kwargs)
-        context['ultimos_orcamentos'] = Orcamento.objects.all()[:3]
+        context['ultimos_orcamentos'] = Orcamento.objects.all()[:4]
         return context
 
 

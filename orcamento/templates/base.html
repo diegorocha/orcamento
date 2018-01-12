@@ -50,26 +50,16 @@
                         {% for fatura in orcamento.faturas.all %}
                             <li><a href="{% url 'cartao:fatura' fatura.id %}">{{ fatura.descricao }}</a></li>
                         {% endfor %}
-                    <li role="separator" class="divider"></li>
+                        {% if orcamento.faturas.count > 0 %}
+                        <li role="separator" class="divider"></li>
+                        {% endif %}
                     {% empty %}
                     <li><a href="#">Nenhuma fatura disponível</a></li>
                     {% endfor %}
-                    <li><a href="#">Compras Parceladas</a></li>
+{#                    <li><a href="#">Compras Parceladas</a></li>#}
                     <li><a href="{% url 'cartao:cadastrar-compra' %}">Nova compra com cartão</a></li>
                     <li><a href="{% url 'cartao:fechar-fatura' %}">Fechar Fatura</a></li>
                   </ul>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav">
-              <li><a href="{% url 'orcamento:estatistica' %}">Estatísticas</a></li>
-            </ul>
-            <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Ajustes <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{% url 'admin:index' %}">Admin</a></li>
-                        <li><a href="{% url 'orcamento:ajustar-categorias' %}">Ajustar Categorias</a></li>
-                    </ul>
                 </li>
             </ul>
             <ul class="nav navbar-nav">
@@ -85,6 +75,12 @@
                     <li><a href="{% url 'compras:listas' %}">Todas</a></li>
                     </ul>
                 </li>
+            </ul>
+            <ul class="nav navbar-nav">
+              <li><a href="{% url 'orcamento:estatistica' %}">Estatísticas</a></li>
+            </ul>
+            <ul class="nav navbar-nav">
+              <li><a href="{% url 'admin:index' %}">Admin</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li class="dropdown">
