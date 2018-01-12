@@ -12,6 +12,7 @@ from orcamento.models import Categoria, Orcamento
 
 class CadastrarCompraCartaoView(BaseViewMixin, generic.TemplateView):
     template_name = 'cadastrar-compra-cartao.html'
+    permission_required = "cartao.add_compracartao"
 
     def get_context_data(self, **kwargs):
         context = super(CadastrarCompraCartaoView, self).get_context_data(**kwargs)
@@ -22,6 +23,7 @@ class CadastrarCompraCartaoView(BaseViewMixin, generic.TemplateView):
 
 class FecharFaturaView(BaseViewMixin, generic.TemplateView):
     template_name = 'fechar-fatura.html'
+    permission_required = ('cartao.change_fatura', 'cartao.add_fatura')
 
     def get_context_data(self, **kwargs):
         context = super(FecharFaturaView, self).get_context_data(**kwargs)
@@ -32,6 +34,7 @@ class FecharFaturaView(BaseViewMixin, generic.TemplateView):
 
 class FaturaView(BaseViewMixin, ListView):
     template_name = 'fatura.html'
+    permission_required = 'cartao.change_fatura'
 
     def dispatch(self, request, *args, **kwargs):
         self.fatura = get_object_or_404(models.Fatura, id=self.kwargs['fatura_id'])
