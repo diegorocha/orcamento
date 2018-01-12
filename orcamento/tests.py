@@ -194,7 +194,7 @@ class OrcamentoTest(TestCase):
 class OrcamentoAtualViewTest(LoginRequiredMixin, TestCase):
     def test_verify_redirect(self):
         hoje = date.today()
-        url = reverse('orcamento:orcamento_atual')
+        url = reverse('orcamento:home')
         redirect_url = reverse('orcamento:orcamento', kwargs={'ano': hoje.year, 'mes': hoje.month})
         mommy.make(models.Orcamento, ano=hoje.year, mes=hoje.month)
         response = self.client.get(url)
