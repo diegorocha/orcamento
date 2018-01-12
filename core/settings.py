@@ -97,7 +97,7 @@ STATICFILES_DIRS = [
 ]
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'orcamento:orcamento_atual'
+LOGIN_REDIRECT_URL = 'orcamento:home'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
