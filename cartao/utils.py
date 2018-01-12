@@ -1,7 +1,8 @@
 # coding: utf-8
-from django.db.models import F, Q
+from django.db.models import F, Q, Sum
 
 from cartao.models import Fatura, CompraCartao
+from orcamento.models import Categoria
 
 
 def _incrementa_parcela(compra, n=1):
@@ -55,10 +56,19 @@ def fechar_fatura(fatura, orcamento, valor_final=None):
         nova_compra.valor_final = compra.valor_final
         nova_compra.categoria = compra.categoria
         nova_compra.recorrente = compra.recorrente
-        if compra.parcelas > 1:
-            nova_compra.parcela_atual = compra.parcela_atual + 1
-            nova_compra.parcelas = compra.parcelas
+        nova_compra.parcela_atual = compra.parcela_atual
+        nova_compra.parcelas = compra.parcelas
         nova_compra.save()
     fatura.aberta = False
     fatura.save()
     return nova_fatura
+
+
+def estatistica_fatura(fatura):
+    estatistica = dict([(c['descricao'], 0) for c in Categoria.objects.values('descricao')])
+    if fatura and fatura.compras:
+        for categoria in fatura.compras.values('categoria__descricao').annotate(valor=Sum('valor_inicial')):
+            descricao = categoria['categoria__descricao']
+            valor = categoria.get('valor', 0)
+            estatistica[descricao] = valor
+    return estatistica

@@ -14,6 +14,7 @@ class ListaAtualView(generic.RedirectView):
 
 class ListaView(BaseViewMixin, generic.DetailView):
     template_name = 'lista-compras.html'
+    permission_required = 'compras.change_listacompras'
 
     def get_object(self, queryset=None):
         return get_object_or_404(models.ListaCompras, orcamento__ano=self.kwargs['ano'], orcamento__mes=self.kwargs['mes'])
@@ -21,6 +22,7 @@ class ListaView(BaseViewMixin, generic.DetailView):
 
 class ListaComprasView(BaseViewMixin, generic.TemplateView):
     template_name = 'listagem-compras.html'
+    permission_required = 'compras.change_listacompras'
 
     def get_context_data(self, **kwargs):
         context = super(ListaComprasView, self).get_context_data(**kwargs)
