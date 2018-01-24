@@ -7,21 +7,25 @@ from rest_framework.permissions import IsAuthenticated
 class MercadoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Mercado
+        fields = '__all__'
 
 
 class SecaoListaSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.SecaoLista
+        fields = '__all__'
 
 
 class ItensListaSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ItensLista
+        fields = '__all__'
 
 
 class ItemCompraSerialier(serializers.ModelSerializer):
     class Meta:
         model = models.ItemCompra
+        fields = '__all__'
 
 
 class MercadoViewSet(viewsets.ModelViewSet):

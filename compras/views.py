@@ -1,7 +1,8 @@
+from django.urls import reverse
+
 from compras import models
 from datetime import date
 from django.views import generic
-from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from core.views import BaseViewMixin
 

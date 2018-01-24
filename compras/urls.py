@@ -1,6 +1,7 @@
 from compras import views
 from django.conf.urls import url
 
+app_name = 'compras'
 urlpatterns = [
     url(r'^$', views.ListaAtualView.as_view(), name='lista-atual'),
     url(r'^listas$', views.ListaComprasView.as_view(), name='listas'),

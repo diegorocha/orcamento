@@ -12,6 +12,7 @@ from rest_framework.decorators import detail_route, list_route
 class ContaSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Conta
+        fields = '__all__'
         read_only_fields = ('a_pagar',)
 
 
@@ -20,11 +21,13 @@ class OrcamentoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Orcamento
+        fields = '__all__'
 
 
 class CategoriaSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Categoria
+        fields = '__all__'
 
 
 class OrcamentoViewSet(viewsets.ModelViewSet):

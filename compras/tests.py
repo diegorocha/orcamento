@@ -3,8 +3,7 @@ from random import randrange
 from model_mommy import mommy
 from django.test import TestCase
 from orcamento.models import Orcamento
-from rest_framework.test import APITestCase
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from core.tests import LoginRequiredMixin, ModelViewSetTestCase
 from compras.models import Mercado, SecaoLista, ItensLista, ListaCompras, ItemCompra
 

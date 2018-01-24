@@ -10,7 +10,7 @@ from orcamento import models
 from model_mommy import mommy
 from django.test import TestCase
 from compras.models import Mercado
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from core.tests import LoginRequiredMixin, ModelViewSetTestCase
 
 

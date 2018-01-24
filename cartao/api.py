@@ -15,20 +15,25 @@ from orcamento.models import Orcamento
 class BandeiraSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Bandeira
+        fields = '__all__'
 
 
 class CartaoSerializer(serializers.ModelSerializer):
     bandeira = serializers.StringRelatedField()
+
     class Meta:
         model = models.Cartao
+        fields = '__all__'
 
 
 class FaturaSerializer(serializers.ModelSerializer):
     orcamento = serializers.StringRelatedField()
     cartao = serializers.StringRelatedField()
     valor_inicial = serializers.FloatField(read_only=True)
+
     class Meta:
         model = models.Fatura
+        fields = '__all__'
 
 
 class FaturaRetrieveSerializer(FaturaSerializer):

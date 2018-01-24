@@ -46,7 +46,7 @@ class ItensLista(models.Model):
         verbose_name = 'Item'
         verbose_name_plural = 'Itens'
         ordering = ('secao', 'ordem', 'descricao')
-    secao = models.ForeignKey(SecaoLista, related_name='itens')
+    secao = models.ForeignKey(SecaoLista, related_name='itens', on_delete=models.CASCADE)
     ordem = models.IntegerField('Ordem', blank=True, default=999)
     descricao = models.CharField('Descrição', max_length=50)
     quantidade_sugerida = models.IntegerField('Qtd Sugerida', blank=True, default=1)
@@ -89,8 +89,8 @@ class ListaCompras(models.Model):
 class ItemCompra(models.Model):
     class Meta:
         ordering = ('lista', 'item')
-    lista = models.ForeignKey(ListaCompras)
-    item = models.ForeignKey(ItensLista)
+    lista = models.ForeignKey(ListaCompras, on_delete=models.CASCADE)
+    item = models.ForeignKey(ItensLista, on_delete=models.CASCADE)
     quantidade_sugerida = models.IntegerField('Qtd Sugerida', blank=True, null=True)
     unidade = models.CharField('Unidade', max_length=20, blank=True, null=True)
     comprar = models.BooleanField(blank=True, default=True)
