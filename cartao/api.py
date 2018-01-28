@@ -43,12 +43,15 @@ class FaturaRetrieveSerializer(FaturaSerializer):
 class CompraCartaoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CompraCartao
+        fields = '__all__'
 
 
 class CompraCartaoFullSerializer(CompraCartaoSerializer):
     fatura = FaturaSerializer()
+
     class Meta:
         model = models.CompraCartao
+        fields = '__all__'
 
 
 class BandeiraViewset(viewsets.ModelViewSet):
