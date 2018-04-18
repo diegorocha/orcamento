@@ -1,4 +1,6 @@
 # coding: utf-8
+from copy import copy
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from orcamento.models import Orcamento, Categoria
@@ -47,6 +49,50 @@ class Fatura(models.Model):
     def valor_inicial(self):
         value = self.compras.aggregate(models.Sum('valor_inicial'))
         return value.get('valor_inicial__sum') or 0
+
+    def get_compras_proxima_fatura(self, compras=None):
+        if not compras:
+            compras = self.compras
+        novas_compras = []
+        total = {
+            'valor_real': 0,
+            'valor_dolar': 0,
+            'valor_fatura': 0
+        }
+        for compra in compras:
+            nova_compra = None
+            if compra.recorrente:
+                nova_compra = copy(compra)
+            if compra.parcelas > 1 and compra.parcela_atual < compra.parcelas:
+                nova_compra = copy(compra)
+                nova_compra.parcela_atual += 1
+            if nova_compra:
+                total['valor_real'] += nova_compra.valor_real or 0
+                total['valor_dolar'] += nova_compra.valor_dolar or 0
+                total['valor_fatura'] += nova_compra.valor_fatura or 0
+                novas_compras.append(nova_compra)
+        return novas_compras, total
+
+    def _get_nome_fatura(self, n):
+        cartao = self.cartao
+        ano = self.orcamento.ano
+        mes = self.orcamento.mes + n
+        if mes > 12:
+            mes = mes % 12
+            ano += int(mes / 12)
+        return '%s - %d/%02d' % (cartao, ano, mes)
+
+    def get_proximas_faturas(self, qtd=2):
+        faturas = []
+        compras = self.compras.all()
+        for i in range(1, qtd + 1):
+            compras, totais = self.get_compras_proxima_fatura(compras)
+            faturas.append({
+                'fatura': self._get_nome_fatura(i),
+                'compras': compras,
+                'total': totais
+            })
+        return faturas
 
     def __str__(self):
         return '%s - %s' % (self.cartao, self.orcamento)

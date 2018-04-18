@@ -59,6 +59,14 @@ class Orcamento(models.Model):
         value = self.mercados.filter(tipo=1).aggregate(models.Sum('valor'))
         return value.get('valor__sum') or 0
 
+    def get_next_orcamento(self):
+        ano = self.ano
+        mes = self.mes + 1
+        if mes > 12:
+            mes = 1
+            ano += 1
+        return ano, mes
+
     def __str__(self):
         return '%04d/%02d' % (self.ano, self.mes)
 

@@ -5,7 +5,7 @@ from django.views.generic.list import ListView
 from simplejson import dumps
 
 from cartao import models
-from cartao.utils import get_compras_proxima_fatura, get_queryset_proxima_fatura, estatistica_fatura
+from cartao.utils import estatistica_fatura
 from core.views import BaseViewMixin
 from orcamento.models import Categoria, Orcamento
 
@@ -42,14 +42,6 @@ class FaturaView(BaseViewMixin, ListView):
 
     def get_queryset(self):
         return models.CompraCartao.objects.filter(fatura=self.fatura)
-
-    @property
-    def proxima_fatura(self):
-        compras_proxima_fatura, totais_proxima_fatura = get_compras_proxima_fatura(self.get_queryset(), n=1, incluir_totais=True)
-        data = {}
-        data['compras'] = compras_proxima_fatura
-        data['total'] = totais_proxima_fatura
-        return data
 
     @property
     def total(self):
