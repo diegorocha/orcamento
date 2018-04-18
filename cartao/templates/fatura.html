@@ -122,6 +122,10 @@
     </table>
     {% endfor %}
 
+    <div>
+        <p class="text-center"><a href="{% url 'cartao:proximas-faturas' view.fatura.cartao.id %}">Próximas faturas</a></p>
+    </div>
+
 {% endblock %}
 
 {% block custom_js %}

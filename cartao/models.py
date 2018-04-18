@@ -51,8 +51,8 @@ class Fatura(models.Model):
         return value.get('valor_inicial__sum') or 0
 
     def get_compras_proxima_fatura(self, compras=None):
-        if not compras:
-            compras = self.compras
+        if compras is None:
+            compras = self.compras.all()
         novas_compras = []
         total = {
             'valor_real': 0,
@@ -82,7 +82,9 @@ class Fatura(models.Model):
             ano += int(mes / 12)
         return '%s - %d/%02d' % (cartao, ano, mes)
 
-    def get_proximas_faturas(self, qtd=2):
+    def get_proximas_faturas(self, qtd=1):
+        if not self.aberta:
+            return []
         faturas = []
         compras = self.compras.all()
         for i in range(1, qtd + 1):

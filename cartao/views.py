@@ -59,3 +59,13 @@ class FaturaView(BaseViewMixin, ListView):
     def estatistica(self):
         estatistica = estatistica_fatura(self.fatura)
         return dumps(estatistica)
+
+
+class ProximasFaturasView(BaseViewMixin, generic.TemplateView):
+    template_name = 'proximas-faturas.html'
+
+    def get_faturas(self):
+        qtd = int(self.request.GET.get('qtd', 3))
+        cartao = get_object_or_404(models.Cartao, id=self.kwargs['cartao_id'])
+        fatura = cartao.faturas.filter(aberta=True).last()
+        return fatura.get_proximas_faturas(qtd=qtd)
