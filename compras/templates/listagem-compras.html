@@ -5,7 +5,7 @@
 {% block title %}<h2>Lista de Compras</h2>{% endblock %}
 
 {% block item_list %}
-<a href="{% url 'orcamento:orcamento' item.orcamento.ano item.orcamento.mes %}">
+<a href="{% url 'compras:lista' item.orcamento.ano item.orcamento.mes %}">
     {{ item.orcamento }}
 </a>
 {% endblock %}
