@@ -65,6 +65,10 @@ class Fatura(models.Model):
                 nova_compra = copy(compra)
             if compra.parcelas > 1 and compra.parcela_atual < compra.parcelas:
                 nova_compra = copy(compra)
+                if nova_compra.valor_parcela:
+                    # Tratamento de compras parceladas com valor de inicial diferente
+                    nova_compra.valor_real = nova_compra.valor_parcela
+                    nova_compra.valor_parcela = None
                 nova_compra.parcela_atual += 1
             if nova_compra:
                 total['valor_real'] += nova_compra.valor_real or 0
@@ -113,6 +117,7 @@ class CompraCartao(models.Model):
     valor_inicial = models.DecimalField('Valor Inicial', max_digits=8, decimal_places=2, blank=True, null=False)
     valor_fatura = models.DecimalField('Valor Fatura', max_digits=8, decimal_places=2, blank=True, null=True)
     valor_final = models.DecimalField('Valor Final', max_digits=8, decimal_places=2, blank=True, null=True)
+    valor_parcela = models.DecimalField('Valor Parcela', max_digits=8, decimal_places=2, blank=True, null=True)
     categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, related_name='compras_cartao', null=True, blank=True)
     parcelas = models.IntegerField('Parcelas', blank=True, default=1)
     parcela_atual = models.IntegerField('Parcela', blank=True, default=1)
