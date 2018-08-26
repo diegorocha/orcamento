@@ -19,6 +19,7 @@ router.register(r'cartao/bandeira', api_cartao.BandeiraViewset)
 router.register(r'cartao/cartao', api_cartao.CartaoViewset)
 router.register(r'cartao/fatura', api_cartao.FaturaViewset)
 router.register(r'cartao/compra', api_cartao.CompraCartaoViewset)
+router.register(r'cartao/sms', api_cartao.SMSCartaoViewset)
 
 
 urlpatterns = [

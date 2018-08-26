@@ -54,6 +54,12 @@ class CompraCartaoFullSerializer(CompraCartaoSerializer):
         fields = '__all__'
 
 
+class SMSCartaoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.SMSCartao
+        fields = '__all__'
+
+
 class BandeiraViewset(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = models.Bandeira.objects.all()
@@ -92,3 +98,9 @@ class CompraCartaoViewset(viewsets.ModelViewSet):
         if self.action == "create":
             return CompraCartaoSerializer
         return CompraCartaoFullSerializer
+
+
+class SMSCartaoViewset(viewsets.mixins.CreateModelMixin, viewsets.GenericViewSet):
+    permission_classes = (IsAuthenticated,)
+    queryset = models.SMSCartao.objects.all()
+    serializer_class = SMSCartaoSerializer
