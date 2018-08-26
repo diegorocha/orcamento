@@ -132,3 +132,14 @@ class CompraCartao(models.Model):
 
     def __str__(self):
         return '%s de %s' % (self.descricao, self.fatura)
+
+
+@python_2_unicode_compatible
+class SMSCartao(models.Model):
+    class Meta:
+        verbose_name = 'SMS Cartão'
+        verbose_name_plural = 'SMSs Cartão'
+    texto = models.TextField(unique=True)
+
+    def __str__(self):
+        return self.texto

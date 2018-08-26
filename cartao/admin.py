@@ -23,3 +23,8 @@ class FaturaAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'valor_inicial', 'valor_final', 'aberta']
     list_filter = ['cartao', 'aberta', 'orcamento']
     readonly_fields = ['valor_inicial']
+
+
+@admin.register(models.SMSCartao)
+class SMSCartaoAdmin(admin.ModelAdmin):
+    pass
