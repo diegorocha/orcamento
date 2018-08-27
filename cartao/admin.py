@@ -27,4 +27,4 @@ class FaturaAdmin(admin.ModelAdmin):
 
 @admin.register(models.SMSCartao)
 class SMSCartaoAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['texto', 'criado']

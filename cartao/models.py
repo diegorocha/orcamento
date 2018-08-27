@@ -139,7 +139,9 @@ class SMSCartao(models.Model):
     class Meta:
         verbose_name = 'SMS Cartão'
         verbose_name_plural = 'SMSs Cartão'
+        ordering = ['criado']
     texto = models.TextField(unique=True)
+    criado = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.texto
