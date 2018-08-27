@@ -65,6 +65,7 @@ def parse_sms(sms):
                     fatura = alias.cartao.faturas.filter(aberta=True).first()
                     data['fatura_id'] = fatura.id if fatura else None
                     # Ajuste dos dados
+                    data['sms_id'] = sms.id
                     data['sms'] = sms.texto
                     data['descricao_fatura'] = groups.get('descricao_fatura', '').title()
                     data['valor'] = float(groups.get('valor', '0').replace(',', '.'))
