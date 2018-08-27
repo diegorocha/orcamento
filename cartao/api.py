@@ -2,13 +2,13 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework import viewsets
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import detail_route, list_route
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from cartao import models
-from cartao.utils import fechar_fatura
+from cartao.utils import fechar_fatura, parse_sms
 from orcamento.models import Orcamento
 
 
@@ -100,7 +100,14 @@ class CompraCartaoViewset(viewsets.ModelViewSet):
         return CompraCartaoFullSerializer
 
 
-class SMSCartaoViewset(viewsets.mixins.CreateModelMixin, viewsets.GenericViewSet):
+class SMSCartaoViewset(viewsets.mixins.CreateModelMixin, viewsets.mixins.DestroyModelMixin, viewsets.GenericViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = models.SMSCartao.objects.all()
     serializer_class = SMSCartaoSerializer
+
+    @list_route()
+    def proximo(self, request):
+        sms = self.queryset.first()
+        if not sms:
+            return Response(status=404)
+        return Response(parse_sms(sms))

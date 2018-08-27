@@ -145,3 +145,12 @@ class SMSCartao(models.Model):
 
     def __str__(self):
         return self.texto
+
+
+@python_2_unicode_compatible
+class CartaoAliasSMS(models.Model):
+    cartao = models.ForeignKey(Cartao, on_delete=models.CASCADE, related_name='alias')
+    texto = models.CharField(max_length=50)
+
+    def __str__(self):
+        return '%s @ %s' % (self.cartao, self.texto)

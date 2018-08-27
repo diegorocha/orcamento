@@ -2,6 +2,11 @@ from django.contrib import admin
 from cartao import models
 
 
+class CartaoAliasSMSInline(admin.TabularInline):
+    extra = 0
+    model = models.CartaoAliasSMS
+
+
 @admin.register(models.Bandeira)
 class BandeiraAdmin(admin.ModelAdmin):
     pass
@@ -9,7 +14,7 @@ class BandeiraAdmin(admin.ModelAdmin):
 
 @admin.register(models.Cartao)
 class CartaoAdmin(admin.ModelAdmin):
-    pass
+    inlines = [CartaoAliasSMSInline]
 
 
 class CompraCartaoInline(admin.TabularInline):

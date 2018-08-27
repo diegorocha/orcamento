@@ -1,7 +1,9 @@
 # coding: utf-8
+from re import match
+
 from django.db.models import F, Q, Sum
 
-from cartao.models import Fatura, CompraCartao
+from cartao.models import Fatura, CompraCartao, CartaoAliasSMS
 from orcamento.models import Categoria
 
 
@@ -45,3 +47,21 @@ def estatistica_fatura(fatura):
             valor = categoria.get('valor', 0)
             estatistica[descricao] = valor
     return estatistica
+
+
+def parse_sms(sms):
+    regex_list = [
+        r'Compra aprovada no seu (?P<cartao>.*) - (?P<descricao_fatura>.*) valor (?P<moeda>.*) (?P<valor>.*) em.*'
+    ]
+    for regex in regex_list:
+        result = match(regex, sms.texto)
+        if result:
+            data = result.groupdict()
+            cartao_alias = data.get('cartao')
+            if cartao_alias:
+                alias = CartaoAliasSMS.objects.filter(texto__iexact=cartao_alias).first()
+                if alias:
+                    fatura = alias.cartao.faturas.filter(aberta=True).first()
+                    data['fatura_id'] = fatura.id if fatura else None
+                return data
+    return {}
