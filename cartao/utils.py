@@ -53,15 +53,20 @@ def parse_sms(sms):
     regex_list = [
         r'Compra aprovada no seu (?P<cartao>.*) - (?P<descricao_fatura>.*) valor (?P<moeda>.*) (?P<valor>.*) em.*'
     ]
+    data = {}
     for regex in regex_list:
         result = match(regex, sms.texto)
         if result:
-            data = result.groupdict()
-            cartao_alias = data.get('cartao')
+            groups = result.groupdict()
+            cartao_alias = groups.get('cartao')
             if cartao_alias:
                 alias = CartaoAliasSMS.objects.filter(texto__iexact=cartao_alias).first()
                 if alias:
                     fatura = alias.cartao.faturas.filter(aberta=True).first()
                     data['fatura_id'] = fatura.id if fatura else None
+                    # Ajuste dos dados
+                    data['sms'] = sms.texto
+                    data['descricao_fatura'] = groups.get('descricao_fatura', '').title()
+                    data['valor'] = float(groups.get('valor', '0').replace(',', '.'))
                 return data
-    return {}
+    return data
