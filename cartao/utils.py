@@ -67,6 +67,7 @@ def parse_sms(sms):
                     # Ajuste dos dados
                     data['sms_id'] = sms.id
                     data['sms'] = sms.texto
+                    data['moeda'] = groups.get('moeda', '')
                     data['descricao_fatura'] = groups.get('descricao_fatura', '').title()
                     data['valor'] = float(groups.get('valor', '0').replace(',', '.'))
                 return data

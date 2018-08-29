@@ -69,3 +69,13 @@ class ProximasFaturasView(BaseViewMixin, generic.TemplateView):
         cartao = get_object_or_404(models.Cartao, id=self.kwargs['cartao_id'])
         fatura = cartao.faturas.filter(aberta=True).last()
         return fatura.get_proximas_faturas(qtd=qtd)
+
+
+class SMSView(BaseViewMixin, generic.TemplateView):
+    template_name = 'sms.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(SMSView, self).get_context_data(**kwargs)
+        context['categorias'] = Categoria.objects.all()
+        context['faturas'] = models.Fatura.objects.filter(aberta=True).order_by('orcamento', 'cartao')
+        return context
