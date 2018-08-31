@@ -89,6 +89,19 @@ class FaturaViewset(viewsets.ModelViewSet):
         except Exception as ex:
             return Response(dict(error=str(ex)))
 
+    @list_route()
+    def get_by_alias(self, request):
+        alias_param = request.query_params.get('alias')
+        if not alias_param:
+            return Response(status=404)
+        alias = models.CartaoAliasSMS.objects.filter(texto__iexact=alias_param).first()
+        if not alias:
+            return Response(status=404)
+        fatura = alias.cartao.faturas.filter(aberta=True).first()
+        if not fatura:
+            return Response(status=404)
+        return Response(self.serializer_class(fatura).data)
+
 
 class CompraCartaoViewset(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
