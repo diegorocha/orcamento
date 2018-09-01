@@ -90,6 +90,11 @@ class FaturaViewset(viewsets.ModelViewSet):
             return Response(dict(error=str(ex)))
 
     @list_route()
+    def abertas(self, request):
+        faturas = self.queryset.filter(aberta=True)
+        return Response(self.serializer_class(faturas, many=True).data)
+
+    @list_route()
     def get_by_alias(self, request):
         alias_param = request.query_params.get('alias')
         if not alias_param:
