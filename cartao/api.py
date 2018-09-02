@@ -37,6 +37,8 @@ class FaturaSerializer(serializers.ModelSerializer):
 
 
 class CompraCartaoSerializer(serializers.ModelSerializer):
+    categoria = serializers.StringRelatedField()
+
     class Meta:
         model = models.CompraCartao
         fields = '__all__'
