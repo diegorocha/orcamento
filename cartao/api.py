@@ -36,10 +36,6 @@ class FaturaSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class FaturaRetrieveSerializer(FaturaSerializer):
-    cartao = CartaoSerializer()
-
-
 class CompraCartaoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CompraCartao
@@ -52,6 +48,10 @@ class CompraCartaoFullSerializer(CompraCartaoSerializer):
     class Meta:
         model = models.CompraCartao
         fields = '__all__'
+
+
+class FaturaRetrieveSerializer(FaturaSerializer):
+    compras = CompraCartaoSerializer(many=True)
 
 
 class SMSCartaoSerializer(serializers.ModelSerializer):
@@ -76,6 +76,12 @@ class FaturaViewset(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = models.Fatura.objects.all().order_by('orcamento', 'cartao')
     serializer_class = FaturaSerializer
+    serializer_class_retrieve = FaturaRetrieveSerializer
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return self.serializer_class_retrieve
+        return self.serializer_class
 
     @detail_route(methods=['post'])
     def fechar(self, request, pk=None):
