@@ -129,3 +129,14 @@ class SMSCartaoViewset(viewsets.mixins.CreateModelMixin, viewsets.mixins.Destroy
         if not sms:
             return Response(status=404)
         return Response(parse_sms(sms))
+
+    @list_route(methods=['POST'])
+    def parse(self, request):
+        texto = request.data.get('sms') or request.POST.get('sms')
+        if not texto:
+            return Response(status=400)
+        sms = models.SMSCartao(texto=texto)
+        data = parse_sms(sms)
+        if not data:
+            return Response(status=422)
+        return Response(data)
