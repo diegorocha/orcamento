@@ -37,14 +37,13 @@ class FaturaSerializer(serializers.ModelSerializer):
 
 
 class CompraCartaoSerializer(serializers.ModelSerializer):
-    categoria = serializers.StringRelatedField()
-
     class Meta:
         model = models.CompraCartao
         fields = '__all__'
 
 
 class CompraCartaoFullSerializer(CompraCartaoSerializer):
+    categoria = serializers.StringRelatedField()
     fatura = FaturaSerializer()
 
     class Meta:
@@ -121,7 +120,7 @@ class CompraCartaoViewset(viewsets.ModelViewSet):
     queryset = models.CompraCartao.objects.all().order_by('-id')
 
     def get_serializer_class(self):
-        if self.action == "create":
+        if self.action in ["create", "update"]:
             return CompraCartaoSerializer
         return CompraCartaoFullSerializer
 
