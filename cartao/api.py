@@ -42,17 +42,16 @@ class CompraCartaoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CompraCartaoFullSerializer(CompraCartaoSerializer):
+class CompraCartaoListSerializer(CompraCartaoSerializer):
     categoria = serializers.StringRelatedField()
-    fatura = FaturaSerializer()
 
-    class Meta:
-        model = models.CompraCartao
-        fields = '__all__'
+
+class CompraCartaoFullSerializer(CompraCartaoListSerializer):
+    fatura = FaturaSerializer()
 
 
 class FaturaRetrieveSerializer(FaturaSerializer):
-    compras = CompraCartaoSerializer(many=True)
+    compras = CompraCartaoListSerializer(many=True)
 
 
 class SMSCartaoSerializer(serializers.ModelSerializer):
