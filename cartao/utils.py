@@ -51,7 +51,7 @@ def estatistica_fatura(fatura):
 
 def parse_sms(sms):
     regex_list = [
-        r'Compra aprovada no seu (?P<cartao>.*) - (?P<descricao_fatura>.*) valor (?P<moeda>.*) (?P<valor>.*) em.*'
+        r'Compra aprovada no seu (?P<cartao>[\w\s\.]*) - (?P<descricao_fatura>.*) valor (?P<moeda>.*) (?P<valor>.*) em.*'
     ]
     data = {}
     for regex in regex_list:
