@@ -71,7 +71,9 @@
         </tbody>
     </table>
 
+    {% if object_list %}
     <div id="grafico_estatistica" data-estatistica="{{ view.estatistica }}"></div>
+    {% endif %}
 
     {% for proxima_fatura in view.fatura.get_proximas_faturas %}
     <h2>{{ proxima_fatura.fatura }}</h2>
