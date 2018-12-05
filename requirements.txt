@@ -17,7 +17,6 @@ psycopg2==2.7.3.1
 pyparsing==2.1.10
 python-decouple==3.0
 pytz==2017.3
-requests==2.12.4
 simplejson==3.11.1
 six==1.11.0
 urllib3==1.22
