@@ -20,6 +20,8 @@ $(document).ready(function(){
         headers: {"X-CSRFToken": getCookie('csrftoken')},
     });
 
+    iFrameResize({log:true}, '#iframe-contas');
+
     $('.save').hide();
     $('.cancel').hide();
     $('table input').hide();

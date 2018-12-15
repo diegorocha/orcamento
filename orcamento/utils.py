@@ -1,5 +1,8 @@
 # coding: utf-8
 from sys import stdout
+from urllib.parse import urlunparse, urlparse, urlencode
+
+from django.conf import settings
 
 from orcamento import models
 
@@ -103,3 +106,12 @@ def copiar_orcamento(origem, destino, forcar=False, out=None):
         return True, None
     else:
         return False, 'Orçamento "%s" já possui contas' % orcamento_destino
+
+
+def get_contas_url(orcamento, user):
+    parts = urlparse(settings.CONTAS_URL)
+    data = {
+        'id': orcamento.id,
+        't': user.auth_token.key,
+    }
+    return urlunparse(parts._replace(query=urlencode(data)))

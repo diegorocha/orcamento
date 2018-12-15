@@ -4,6 +4,7 @@ from django.views import generic
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, redirect
 from core.views import BaseViewMixin
+from orcamento.utils import get_contas_url
 
 
 class HomeView(BaseViewMixin, generic.TemplateView):
@@ -22,6 +23,13 @@ class HomeView(BaseViewMixin, generic.TemplateView):
 class OrcamentoView(BaseViewMixin, generic.DetailView):
     template_name = 'orcamento.html'
     permission_required = 'orcamento.change_orcamento'
+
+    def get_context_data(self, **kwargs):
+        context = super(OrcamentoView, self).get_context_data(**kwargs)
+        context['contas'] = {
+            'url': get_contas_url(context['object'], self.request.user)
+        }
+        return context
 
     def get_object(self, queryset=None):
         return get_object_or_404(models.Orcamento, ano=self.kwargs['ano'], mes=self.kwargs['mes'])

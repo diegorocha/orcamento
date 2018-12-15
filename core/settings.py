@@ -104,6 +104,8 @@ CORS_ORIGIN_ALLOW_ALL = DEBUG
 
 CORS_ORIGIN_WHITELIST = config('CORS_ORIGIN_WHITELIST', default='').split(',')
 
+CONTAS_URL = config('CONTAS_URL')
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
