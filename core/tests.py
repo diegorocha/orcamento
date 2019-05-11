@@ -1,5 +1,6 @@
 from model_mommy import mommy
 from django.test import TestCase
+from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -10,7 +11,10 @@ class LoginRequiredMixin(TestCase):
         super(LoginRequiredMixin, self).setUp()
         username = 'admin'
         password = '4dm1n'
-        User.objects.create_superuser(username=username, password=password, email='')
+        user = User.objects.create_superuser(username=username, password=password, email='')
+        token = Token()
+        token.user = user
+        token.save()
         self.client.login(username=username, password=password)
 
 
