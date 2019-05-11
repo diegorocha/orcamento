@@ -8,6 +8,11 @@ class ContaInline(admin.TabularInline):
     model = models.Conta
 
 
+class EnergiaEletricaInline(admin.StackedInline):
+    extra = 0
+    model = models.EnergiaEletrica
+
+
 @admin.register(models.Categoria)
 class CategoriaAdmin(admin.ModelAdmin):
     pass
@@ -16,7 +21,7 @@ class CategoriaAdmin(admin.ModelAdmin):
 @admin.register(models.Orcamento)
 class OrcamentoAdmin(admin.ModelAdmin):
     list_filter = ['ano']
-    inlines = [ContaInline, MercadoInline]
+    inlines = [ContaInline, EnergiaEletricaInline, MercadoInline]
     list_display = ['__str__', 'previsto', 'atual', 'a_pagar', 'mercado_principal']
 
 

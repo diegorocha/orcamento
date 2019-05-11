@@ -115,3 +115,32 @@ class Conta(models.Model):
 
     def __str__(self):
         return '%s de %s' % (self.nome, self.orcamento)
+
+
+@python_2_unicode_compatible
+class EnergiaEletrica(models.Model):
+    class Meta:
+        verbose_name = 'Consumo de Energia Elétrica'
+        verbose_name_plural = 'Consumos de Energia Elétrica'
+        ordering = ('orcamento',)
+
+    VERDE = 0
+    AMARELA = 1
+    VERMELHA = 2
+    VERMELHA2 = 3
+    BANDEIRA_CHOICES = ((VERDE, 'Verde'), (AMARELA, 'Amarela'), (VERMELHA, 'Vermelha 1'), (VERMELHA2, 'Vermelha 2'), )
+
+    orcamento = models.ForeignKey(Orcamento, on_delete=models.CASCADE, related_name='energia_eletrica')
+    kwh = models.IntegerField('kWh', blank=False, null=False)
+    bandeira = models.IntegerField('Bandeira', choices=BANDEIRA_CHOICES, blank=True, default=VERDE)
+    valor_kwh = models.DecimalField('Valor kWh', max_digits=8, decimal_places=6, blank=False, null=False)
+    outros_custos = models.DecimalField('Outros Custos', max_digits=8, decimal_places=2, blank=True, default=0.0)
+    valor = models.DecimalField('Valor', max_digits=8, decimal_places=2, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if self.valor is None:
+            self.valor = self.kwh * self.valor_kwh + self.outros_custos
+        super(EnergiaEletrica, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return '%s de %s' % (self._meta.verbose_name, self.orcamento)
