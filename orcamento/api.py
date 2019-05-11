@@ -44,6 +44,10 @@ class OrcamentoViewSet(viewsets.ModelViewSet):
         return Response(utils.estatisticas_mercado())
 
     @list_route()
+    def energia_eletrica(self, request):
+        return Response(utils.estatisticas_energia_eletrica())
+
+    @list_route()
     def total(self, request):
         return Response(utils.estatisticas_total())
 

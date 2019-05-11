@@ -59,6 +59,23 @@ def estatisticas_mercado():
     return data
 
 
+def estatisticas_energia_eletrica():
+    data = {'eixos': [],
+            'data': [{'name': 'kWh', 'data': []},
+                     {'name': 'Valor R$', 'data': []}]
+           }
+    for orcamento in models.Orcamento.objects.distinct()[:12:-1]:
+        data['eixos'].append(str(orcamento))
+        energia_eletrica = orcamento.energia_eletrica.first()
+        if energia_eletrica:
+            data['data'][0]['data'].append(energia_eletrica.kwh)
+            data['data'][1]['data'].append(energia_eletrica.valor)
+        else:
+            data['data'][0]['data'].append(None)
+            data['data'][1]['data'].append(None)
+    return data
+
+
 def estatisticas_total():
     data = {'eixos': [],
             'data': [{'name': 'Previsto', 'data': []},

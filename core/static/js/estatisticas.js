@@ -77,6 +77,39 @@ $(document).ready(function(){
         $('#table_mercado').show();
     }
 
+    function drawChartEnergiaEletrica(data){
+        $('#chart_div_energia_eletrica').highcharts({
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: 'Consumo de Energia Elétrica'
+            },
+            xAxis: {
+                categories: data.eixos
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series: data.data
+        });
+    }
+
     function drawChartTotal(data){
         $('#chart_div_total').highcharts({
             chart: {
@@ -179,7 +212,16 @@ $(document).ready(function(){
         })
     }
 
+    function loadChartEnergiaEletrica(){
+        $.ajax({
+            url: "/api/orcamento/energia_eletrica/"
+        }).success(function(data){
+            drawChartEnergiaEletrica(data);
+        });
+    }
+
     loadChart();
     loadChartMercado();
     loadChartTotal();
+    loadChartEnergiaEletrica();
 });
