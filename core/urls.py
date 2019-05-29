@@ -24,8 +24,8 @@ router.register(r'cartao/sms', api_cartao.SMSCartaoViewset)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^login/$', auth_views.login, {'template_name': 'login.html'}, name='login'),
-    url(r'^logout/$', auth_views.logout, {'next_page': 'login'}, name='logout'),
+    url(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    url(r'^logout/$', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/', include((router.urls, 'api'), namespace='api')),
     url(r'^compras/', include('compras.urls', namespace='compras')),
