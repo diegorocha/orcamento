@@ -82,8 +82,8 @@ class Fatura(models.Model):
         ano = self.orcamento.ano
         mes = self.orcamento.mes + n
         if mes > 12:
-            mes = mes % 12
             ano += int(mes / 12)
+            mes = mes % 12
         return '%s - %d/%02d' % (cartao, ano, mes)
 
     def get_proximas_faturas(self, qtd=1):
