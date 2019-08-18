@@ -64,7 +64,7 @@ def estatisticas_energia_eletrica():
             'data': [{'name': 'kWh', 'data': []},
                      {'name': 'Valor R$', 'data': []}]
            }
-    for orcamento in models.Orcamento.objects.distinct()[:12:-1]:
+    for orcamento in models.Orcamento.objects.filter(energia_eletrica__isnull=False).distinct()[:12:-1]:
         data['eixos'].append(str(orcamento))
         energia_eletrica = orcamento.energia_eletrica.first()
         if energia_eletrica:
