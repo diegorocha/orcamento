@@ -109,6 +109,7 @@ class CompraCartao(models.Model):
     class Meta:
         verbose_name = 'Compra Cartão'
         verbose_name_plural = 'Compras Cartão'
+        ordering = '-id',
     fatura = models.ForeignKey(Fatura, on_delete=models.CASCADE, related_name='compras')
     descricao = models.CharField('Descrição', max_length=50, blank=False, null=False)
     descricao_fatura = models.CharField('Descrição Fatura', max_length=50, blank=True, null=True)
