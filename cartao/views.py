@@ -80,3 +80,25 @@ class SMSView(BaseViewMixin, generic.TemplateView):
         context['categorias'] = Categoria.objects.all()
         context['faturas'] = models.Fatura.objects.filter(aberta=True).order_by('orcamento', 'cartao')
         return context
+
+
+class CartaoRenataView(BaseViewMixin, generic.TemplateView):
+    template_name = 'cartao-renata.html'
+
+    def get_compras(self):
+        return models.CompraCartao.objects.filter(
+            categoria__descricao__iexact="Renata",
+            fatura__aberta=True
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super(CartaoRenataView, self).get_context_data(**kwargs)
+        compras = self.get_compras()
+        context['categorias'] = models.Categoria.objects.all()
+        context['compras'] = compras
+        context['totais'] = compras.aggregate(
+            real=Sum('valor_real'),
+            dolar=Sum('valor_dolar'),
+        )
+        context["pode_editar_categoria"] = self.request.user.has_perm("cartao.change_compracartao")
+        return context

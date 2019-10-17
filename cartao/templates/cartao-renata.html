@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load l10n %}
+
+{% block content %}
+    <div class="col-md-12">
+        <h1 class="text-center">Gastos Cartão Renata</h1>
+
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <th>Descrição</th>
+                <th>Valor</th>
+                <th>Valor Dolar</th>
+                <th>Recorrente</th>
+                <th>Parcelas</th>
+                <th>Cartão</th>
+                {% if pode_editar_categoria %}
+                <th>Categoria</th>
+                <th></th>
+                {% endif %}
+            </thead>
+            <tbody>
+            {% for compra in compras %}
+                <tr data-id="{{ compra.id }}" data-categoria="{{ compra.categoria_id }}">
+                    <td>{{ compra.descricao }}</td>
+                    <td class="compra-renata-valor-real">{{ compra.valor_real }}</td>
+                    <td class="compra-renata-valor-dolar">{{ compra.valor_dolar|default_if_none:"" }}</td>
+                    <td>{{ compra.recorrente|yesno:"Sim,Não," }}</td>
+                    {% if compra.parcelas > 1 %}
+                    <td>{{ compra.parcela_atual }}/{{ compra.parcelas }}</td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                    <td>{{ compra.fatura }}</td>
+                    {% if pode_editar_categoria %}
+                    <td>
+                        <select class="form-control">
+                            {% for categoria in categorias %}
+                            <option
+                                value="{{ categoria.id }}"
+                                {% if categoria.id == compra.categoria_id %}selected{% endif %}>
+                                {{ categoria.descricao }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <span class="edit mudar-categoria glyphicon glyphicon-floppy-disk"></span>
+                    </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+                <th class="text-center">Total</th>
+                <th class="compra-renata-total-real">{{ totais.real|default:"0,00" }}</th>
+                <th class="compra-renata-total-dolar">{{ totais.dolar|default:"0,00" }}</th>
+                <th colspan="{% if pode_editar_categoria %}5{% else %}3{% endif %}" class="text-center">-</th>
+            </tfoot>
+        </table>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+<script src="{% static 'js/cartao-renata.js' %}"></script>
+{% endblock %}

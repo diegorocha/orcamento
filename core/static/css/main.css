@@ -26,6 +26,9 @@ td input {
     color: inherit;
     text-decoration: none;
 }
+.edit {
+    cursor: pointer;
+}
 
 iframe {
     border: 0;
