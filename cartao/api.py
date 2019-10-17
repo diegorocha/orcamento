@@ -119,7 +119,7 @@ class CompraCartaoViewset(viewsets.ModelViewSet):
     queryset = models.CompraCartao.objects.all().order_by('-id')
 
     def get_serializer_class(self):
-        if self.action in ["create", "update"]:
+        if self.action in ["create", "update", "partial_update"]:
             return CompraCartaoSerializer
         return CompraCartaoFullSerializer
 
