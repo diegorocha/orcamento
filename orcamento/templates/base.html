@@ -56,6 +56,7 @@
                     {% empty %}
                     <li><a href="#">Nenhuma fatura disponível</a></li>
                     {% endfor %}
+                    <li><a href="{% url 'cartao:cartao-renata' %}">Compras Renata</a></li>
                     <li><a href="{% url 'cartao:cadastrar-compra' %}">Nova compra com cartão</a></li>
                     <li><a href="{% url 'cartao:sms' %}">SMS</a></li>
                     <li><a href="{% url 'cartao:fechar-fatura' %}">Fechar Fatura</a></li>
