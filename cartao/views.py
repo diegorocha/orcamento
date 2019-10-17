@@ -73,6 +73,7 @@ class ProximasFaturasView(BaseViewMixin, generic.TemplateView):
 
 class SMSView(BaseViewMixin, generic.TemplateView):
     template_name = 'sms.html'
+    permission_required = "cartao.add_compracartao"
 
     def get_context_data(self, **kwargs):
         context = super(SMSView, self).get_context_data(**kwargs)
