@@ -5,7 +5,7 @@
 
 {% block content %}
     <div class="col-md-12">
-        <h1 class="text-center">Gastos Cartão Renata</h1>
+        <h1 class="text-center">Gastos Cartão Terceiros</h1>
 
         <table class="table table-bordered table-striped table-hover">
             <thead>
@@ -59,9 +59,14 @@
                 <th colspan="{% if pode_editar_categoria %}5{% else %}3{% endif %}" class="text-center">-</th>
             </tfoot>
         </table>
+        <div class="col-md-2 col-md-offset-5">
+            <a href="{% url 'cartao:carta-terceiros-download' %}">
+                <button type="button" class="btn btn-success">Download</button>
+            </a>
+        </div>
     </div>
 {% endblock %}
 
 {% block custom_js %}
-<script src="{% static 'js/cartao-renata.js' %}"></script>
+<script src="{% static 'js/cartao-terceiros.js' %}"></script>
 {% endblock %}

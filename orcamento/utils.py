@@ -1,8 +1,11 @@
 # coding: utf-8
+from io import BytesIO
 from sys import stdout
 from urllib.parse import urlunparse, urlparse, urlencode
 
 from django.conf import settings
+from django.db.models import Sum
+from pyexcel_ods3 import save_data
 
 from orcamento import models
 
@@ -132,3 +135,28 @@ def get_contas_url(orcamento, user):
         't': user.auth_token.key,
     }
     return urlunparse(parts._replace(query=urlencode(data)))
+
+
+def gerar_planilha_gastos_terceiros(compras):
+    titulo = 'Gastos Terceiros'
+    format_moeda = 'R$ %.2f'
+    rows = [[ titulo ]]
+
+    for compra in compras:
+        categoria = compra.categoria.descricao
+        descricao = compra.descricao
+        if compra.parcelas > 1:
+            descricao += ' %02d/%02d' % (compra.parcela_atual, compra.parcelas)
+        valor = format_moeda % compra.valor_real
+        rows.append([categoria, descricao, valor])
+
+    for value in compras.values('categoria__descricao').annotate(Sum('valor_real')):
+        rows.append(['Total ' + value['categoria__descricao'], '',  format_moeda % value['valor_real__sum']])
+
+    total = compras.aggregate(Sum('valor_real'))
+    rows.append(['Total', '', format_moeda % total['valor_real__sum']])
+
+    io = BytesIO()
+    save_data(io, {titulo: rows})
+    io.seek(0)
+    return io

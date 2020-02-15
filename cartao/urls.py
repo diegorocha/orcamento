@@ -8,5 +8,6 @@ urlpatterns = [
     url(r'^novo$', views.CadastrarCompraCartaoView.as_view(), name='cadastrar-compra'),
     url(r'^fechar-fatura$', views.FecharFaturaView.as_view(), name='fechar-fatura'),
     url(r'^sms$', views.SMSView.as_view(), name='sms'),
-    url(r'^renata$', views.CartaoRenataView.as_view(), name='cartao-renata'),
+    url(r'^terceiros$', views.CartaoTerceirosView.as_view(), name='cartao-terceiros'),
+    url(r'^terceiros/download$', views.CartaoTerceirosDownloadView.as_view(), name='carta-terceiros-download'),
 ]
