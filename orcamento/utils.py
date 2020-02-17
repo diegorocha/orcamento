@@ -137,24 +137,28 @@ def get_contas_url(orcamento, user):
     return urlunparse(parts._replace(query=urlencode(data)))
 
 
+def format_moeda_planilha(valor):
+    formato = '%.2f'
+    return (formato % valor).replace('.', ',')
+
+
 def gerar_planilha_gastos_terceiros(compras):
     titulo = 'Gastos Terceiros'
-    format_moeda = 'R$ %.2f'
-    rows = [[ titulo ]]
+    rows = [[titulo]]
 
     for compra in compras:
         categoria = compra.categoria.descricao
         descricao = compra.descricao
         if compra.parcelas > 1:
             descricao += ' %02d/%02d' % (compra.parcela_atual, compra.parcelas)
-        valor = format_moeda % compra.valor_real
+        valor = format_moeda_planilha(compra.valor_real)
         rows.append([categoria, descricao, valor])
 
     for value in compras.values('categoria__descricao').annotate(Sum('valor_real')):
-        rows.append(['Total ' + value['categoria__descricao'], '',  format_moeda % value['valor_real__sum']])
+        rows.append(['Total ' + value['categoria__descricao'], '',  format_moeda_planilha(value['valor_real__sum'])])
 
     total = compras.aggregate(Sum('valor_real'))
-    rows.append(['Total', '', format_moeda % total['valor_real__sum']])
+    rows.append(['Total', '', format_moeda_planilha(total['valor_real__sum'])])
 
     io = BytesIO()
     save_data(io, {titulo: rows})
