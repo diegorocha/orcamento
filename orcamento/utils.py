@@ -138,8 +138,7 @@ def get_contas_url(orcamento, user):
 
 
 def format_moeda_planilha(valor):
-    formato = '%.2f'
-    return (formato % valor).replace('.', ',')
+    return float(valor)
 
 
 def gerar_planilha_gastos_terceiros(compras):
