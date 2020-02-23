@@ -13,7 +13,7 @@ class Viagem(models.Model):
         verbose_name_plural = 'Viagens'
         ordering = ['-inicio', '-fim']
     descricao = models.CharField('Descrição', max_length=50, blank=False, null=False)
-    orcamento = models.ForeignKey(Orcamento, on_delete=models.CASCADE, related_name='viagens')
+    orcamento = models.ForeignKey(Orcamento, on_delete=models.CASCADE, related_name='viagens', blank=True, null=True)
     inicio = models.DateField('Início', blank=False)
     fim = models.DateField('Fim', blank=False)
 
