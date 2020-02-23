@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 from django.utils.encoding import python_2_unicode_compatible
 
 from cartao.models import Fatura
@@ -15,6 +16,10 @@ class Viagem(models.Model):
     orcamento = models.ForeignKey(Orcamento, on_delete=models.CASCADE, related_name='viagens')
     inicio = models.DateField('Início', blank=False)
     fim = models.DateField('Fim', blank=False)
+
+    @property
+    def custo_total(self):
+        return self.gastos.aggregate(total=Sum('valor_real'))['total']
 
     def __str__(self):
         return self.descricao + self.inicio.strftime(' %Y/%m')

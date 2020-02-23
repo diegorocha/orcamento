@@ -11,5 +11,5 @@ class GastoViagemInline(admin.TabularInline):
 @admin.register(models.Viagem)
 class OrcamentoAdmin(admin.ModelAdmin):
     list_filter = ['orcamento']
-    list_display = ['__str__', 'inicio', 'fim']
+    list_display = ['__str__', 'inicio', 'fim', 'custo_total']
     inlines = [GastoViagemInline, ]
