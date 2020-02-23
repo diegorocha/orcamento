@@ -36,6 +36,7 @@ class Fatura(models.Model):
     class Meta:
         verbose_name = 'Fatura'
         verbose_name_plural = 'Faturas'
+        ordering = ['-orcamento', 'cartao']
     cartao = models.ForeignKey(Cartao, on_delete=models.CASCADE, related_name='faturas')
     orcamento = models.ForeignKey(Orcamento, on_delete=models.CASCADE, related_name='faturas')
     aberta = models.BooleanField('Aberta', blank=True, default=True)
