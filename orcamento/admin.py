@@ -17,7 +17,12 @@ class EnergiaEletricaInline(admin.StackedInline):
 class CategoriaAdmin(admin.ModelAdmin):
     pass
 
-    
+
+@admin.register(models.Moeda)
+class MoedaAdmin(admin.ModelAdmin):
+    list_display = ['sigla', 'simbolo', 'nome']
+
+
 @admin.register(models.Orcamento)
 class OrcamentoAdmin(admin.ModelAdmin):
     list_filter = ['ano']

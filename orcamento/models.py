@@ -18,6 +18,20 @@ class Categoria(models.Model):
 
 
 @python_2_unicode_compatible
+class Moeda(models.Model):
+    class Meta:
+        verbose_name = 'Moeda'
+        verbose_name_plural = 'Moedas'
+        ordering = ['nome']
+    sigla = models.CharField('Sigla', max_length=3, blank=False, null=False)
+    simbolo = models.CharField('Símbolo', max_length=5, blank=False, null=False)
+    nome = models.CharField('Nome', max_length=50, blank=False, null=False)
+
+    def __str__(self):
+        return self.nome
+
+
+@python_2_unicode_compatible
 class Orcamento(models.Model):
     class Meta:
         verbose_name = 'Orçamento'
