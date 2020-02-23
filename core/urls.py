@@ -30,5 +30,6 @@ urlpatterns = [
     url(r'^api/', include((router.urls, 'api'), namespace='api')),
     url(r'^compras/', include('compras.urls', namespace='compras')),
     url(r'^cartao/', include('cartao.urls', namespace='cartao')),
+    url(r'^viagem/', include('viagem.urls', namespace='viagem')),
     url(r'', include('orcamento.urls', namespace='orcamento')),
 ]

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load l10n %}
+{% load dia_da_semana %}
+
+{% block custom_head %}
+    <link href="{% static "css/viagem.css" %}" rel="stylesheet">
+{% endblock custom_head %}
+
+{% block content %}
+    <div class="col-md-12">
+        <h1 class="text-center">{{ viagem }}</h1>
+        <h4 class="text-center">{{ viagem.inicio|date:'d/m/Y' }} a {{ viagem.fim|date:'d/m/Y' }}</h4>
+        <h4 class="text-center">R$ {{ viagem.custo_total|default:'0,00' }}</h4>
+    </div>
+
+    {% if viagem.gastos.all %}
+    <div class="col-md-12">
+        {% for dia in dias %}
+            <div class="col-md-3">
+                <div>
+                    <button type="button" class="btn btn-default navbar-btn btn-accordion">
+                        <span class="dia-info">{{ dia.dia|date:'d/m' }} {{ dia.dia|dia_da_semana }}</span>
+                        <span class="dia-total">R$ {{ dia.total }}</span>
+                        <span class="dia-icone glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="gastos-dia-tabela hidden">
+                    <table class="table table-bordered table-striped table-hover">
+                       <tbody>
+                        {% for gasto in dia.gastos %}
+                            <tr>
+                                <td>
+                                {{ gasto.descricao }}
+                                </td>
+                                <td>
+                                    {{ gasto.categoria }}
+                                </td>
+                                {% if gasto.valor_moeda %}
+                                    <td class="text-right">
+                                        R$ {{ gasto.valor_real }}
+                                    </td>
+                                    <td>
+                                        {{ gasto.moeda }}
+                                    </td>
+                                    <td class="text-right">
+                                        {{ gasto.moeda.simbolo }} {{ gasto.valor_moeda }}
+                                    </td>
+                                {% else %}
+                                    <td colspan="3" class="text-right">
+                                    R$ {{ gasto.valor_real }}
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-4 col-md-offset-4">
+        <table class="table table-bordered table-striped table-hover table-categorias">
+            <thead>
+               <th>Categoria</th>
+                <th>Total</th>
+            </thead>
+            <tbody>
+                {% for categoria in categorias %}
+                    <tr class="categoria_total" data-name="{{ categoria.categoria__descricao }}" data-value="{{ categoria.total }}" >
+                        <td>{{ categoria.categoria__descricao }}</td>
+                        <td class="text-right">R$ {{ categoria.total }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Total</th>
+                    <th class="text-right">R$ {{ viagem.custo_total }}</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="col-md-6 col-md-offset-3" id="grafico_categoria_viagem">
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block custom_js %}
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="{% static 'js/viagem.js' %}"></script>
+{% endblock %}

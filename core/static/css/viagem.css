@@ -1,0 +1,26 @@
+.dia-info {
+    float: left;
+}
+
+.dia-total {
+    float: right;
+}
+
+.dia-icone {
+    float: right;
+    display: none;
+}
+
+.btn-accordion {
+    font-weight: bold;
+    width: 100%;
+    margin-bottom: 0 !important;
+}
+
+.table-categorias {
+    margin-top: 10px;
+}
+
+#grafico_categoria_viagem {
+    min-height: 400px;
+}

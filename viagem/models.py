@@ -30,7 +30,7 @@ class GastoViagem(models.Model):
     class Meta:
         verbose_name = 'Gasto Viagem'
         verbose_name_plural = 'Gastos de Viagem'
-        ordering = ['dia', 'id']
+        ordering = ['dia',]
     viagem = models.ForeignKey(Viagem, on_delete=models.CASCADE, related_name='gastos')
     dia = models.DateField('Dia', blank=False, null=False)
     descricao = models.CharField('Descrição', max_length=50, blank=False, null=False)
