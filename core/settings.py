@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'orcamento',
     'compras',
     'cartao',
+    'viagem',
 ]
 
 MIDDLEWARE = [
