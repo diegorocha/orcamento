@@ -21,6 +21,10 @@
     margin-top: 10px;
 }
 
+.btn-editar {
+    width: 100%;
+}
+
 #grafico_categoria_viagem {
     min-height: 400px;
 }
