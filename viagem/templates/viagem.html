@@ -88,9 +88,11 @@
     </div>
     {% endif %}
 
+    {% if pode_editar %}
     <div class="col-md-2 col-md-offset-5">
         <a class="btn btn-primary btn-editar" href="{% url 'admin:viagem_viagem_change' viagem.id %}">Editar Viagem</a>
     </div>
+    {% endif %}
 {% endblock %}
 
 {% block custom_js %}

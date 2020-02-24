@@ -8,6 +8,7 @@ from viagem import models
 
 class ViagemView(BaseViewMixin, generic.TemplateView):
     template_name = 'viagem.html'
+    permission_required = 'viagem.view_viagem'
     viagem = None
 
     def get_object(self):
@@ -28,4 +29,5 @@ class ViagemView(BaseViewMixin, generic.TemplateView):
         data['viagem'] = self.viagem
         data['dias'] = self.get_gastos_por_dia()
         data['categorias'] = self.get_gastos_por_categoria()
+        data['pode_editar'] = self.request.user.has_perm('viagem.change_viagem')
         return data
