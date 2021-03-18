@@ -4,7 +4,7 @@ chardet==3.0.4
 coverage==4.3.1
 coveralls==1.1
 dj-database-url==0.4.1
-Django==2.2.10
+Django==2.2.18
 django-cors-headers==2.4.0
 django-nose==1.4.4
 djangorestframework==3.9.4
