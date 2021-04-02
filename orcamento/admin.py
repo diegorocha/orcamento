@@ -27,7 +27,7 @@ class MoedaAdmin(admin.ModelAdmin):
 class OrcamentoAdmin(admin.ModelAdmin):
     list_filter = ['ano']
     inlines = [ContaInline, EnergiaEletricaInline, MercadoInline]
-    list_display = ['__str__', 'previsto', 'atual', 'a_pagar', 'mercado_principal']
+    list_display = ['__str__', 'previsto', 'atual', 'a_pagar', 'mercado_principal', 'total_energia_eletrica']
 
 
 @admin.register(models.Conta)

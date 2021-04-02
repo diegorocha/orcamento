@@ -73,6 +73,11 @@ class Orcamento(models.Model):
         value = self.mercados.filter(tipo=1).aggregate(models.Sum('valor'))
         return value.get('valor__sum') or 0
 
+    @property
+    def total_energia_eletrica(self):
+        value = self.energia_eletrica.all().aggregate(models.Sum('valor'))
+        return value.get('valor__sum') or 0
+
     def get_next_orcamento(self):
         ano = self.ano
         mes = self.mes + 1
