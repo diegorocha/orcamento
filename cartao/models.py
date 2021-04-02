@@ -104,7 +104,7 @@ class Fatura(models.Model):
 
     def save(self, *args, **kwargs):
         if self.cartao and not self.cartao.ativo:
-            raise ValidationError(f'Cartão {self.cartao} não está ativo')
+            raise ValidationError('Cartão %s não está ativo' % self.cartao)
         super(Fatura, self).save(*args, **kwargs)
 
     def __str__(self):
