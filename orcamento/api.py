@@ -1,12 +1,13 @@
-from orcamento import utils
-from orcamento import models
 from django.http import Http404
-from rest_framework import viewsets
-from rest_framework import serializers
-from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from rest_framework import serializers
+from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import detail_route, list_route
+from rest_framework.response import Response
+
+from orcamento import models
+from orcamento import utils
 
 
 class ContaSerializer(serializers.ModelSerializer):
@@ -35,23 +36,23 @@ class OrcamentoViewSet(viewsets.ModelViewSet):
     queryset = models.Orcamento.objects.all()
     serializer_class = OrcamentoSerializer
 
-    @list_route()
+    @action(detail=False)
     def estatisticas(self, request):
         return Response(utils.gerar_estatisticas())
 
-    @list_route()
+    @action(detail=False)
     def mercado(self, request):
         return Response(utils.estatisticas_mercado())
 
-    @list_route()
+    @action(detail=False)
     def energia_eletrica(self, request):
         return Response(utils.estatisticas_energia_eletrica())
 
-    @list_route()
+    @action(detail=False)
     def total(self, request):
         return Response(utils.estatisticas_total())
 
-    @detail_route()
+    @action(detail=True)
     def estatistica(self, request, pk):
         orcamento = get_object_or_404(self.queryset, pk=pk)
         return Response(utils.estatisticas_orcamento(orcamento))
@@ -62,13 +63,13 @@ class ContaViewSet(viewsets.ModelViewSet):
     queryset = models.Conta.objects.all()
     serializer_class = ContaSerializer
 
-    @list_route()
+    @action(detail=False)
     def sem_categoria(self, request):
         queryset = self.queryset.filter(categoria__isnull=True)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-    @list_route()
+    @action(detail=False)
     def ajustar(self, request):
         queryset = self.queryset.filter(categoria__isnull=True).first()
         if queryset:

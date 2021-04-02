@@ -2,7 +2,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework import viewsets
-from rest_framework.decorators import detail_route, list_route
+from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -83,7 +83,7 @@ class FaturaViewset(viewsets.ModelViewSet):
             return self.serializer_class_retrieve
         return self.serializer_class
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def fechar(self, request, pk=None):
         fatura = get_object_or_404(self.queryset, pk=pk)
         valor_final = request.POST.get('valor_final')
@@ -95,12 +95,12 @@ class FaturaViewset(viewsets.ModelViewSet):
         except Exception as ex:
             return Response(dict(error=str(ex)))
 
-    @list_route()
-    def abertas(self, request):
+    @action(detail=False)
+    def abertas(self, _):
         faturas = self.queryset.filter(aberta=True)
         return Response(self.serializer_class(faturas, many=True).data)
 
-    @list_route()
+    @action(detail=False)
     def get_by_alias(self, request):
         alias_param = request.query_params.get('alias')
         if not alias_param:
@@ -129,14 +129,14 @@ class SMSCartaoViewset(viewsets.mixins.CreateModelMixin, viewsets.mixins.Destroy
     queryset = models.SMSCartao.objects.all()
     serializer_class = SMSCartaoSerializer
 
-    @list_route()
-    def proximo(self, request):
+    @action(detail=False)
+    def proximo(self, _):
         sms = self.queryset.first()
         if not sms:
             return Response(status=404)
         return Response(parse_sms(sms))
 
-    @list_route(methods=['POST'])
+    @action(detail=False, methods=['POST'])
     def parse(self, request):
         texto = request.data.get('sms') or request.POST.get('sms')
         if not texto:
