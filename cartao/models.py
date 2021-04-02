@@ -25,7 +25,8 @@ class Cartao(models.Model):
         verbose_name_plural = 'Cartões'
     bandeira = models.ForeignKey(Bandeira, on_delete=models.CASCADE, related_name='cartoes')
     descricao = models.CharField('Descrição', max_length=50, blank=True, null=True)
-    limite = models.DecimalField('Valor em Dolar', max_digits=8, decimal_places=2, blank=True, null=True)
+    limite = models.DecimalField('Limite', max_digits=8, decimal_places=2, blank=True, null=True)
+    ativo = models.BooleanField('Ativo', blank=True, null=False, default=True)
 
     def __str__(self):
         return '%s %s' % (self.descricao, self.bandeira)
@@ -101,6 +102,11 @@ class Fatura(models.Model):
             })
         return faturas
 
+    def save(self, *args, **kwargs):
+        if self.cartao and not self.cartao.ativo:
+            raise ValidationError(f'Cartão {self.cartao} não está ativo')
+        super(Fatura, self).save(*args, **kwargs)
+
     def __str__(self):
         return '%s - %s' % (self.cartao, self.orcamento)
 
@@ -128,8 +134,11 @@ class CompraCartao(models.Model):
     def save(self, *args, **kwargs):
         if not self.valor_inicial:
             self.valor_inicial = self.valor_real
-        if self.fatura and not self.fatura.aberta:
-            raise ValidationError('Fatura %s já está fechada' % self.fatura)
+        if self.fatura:
+            if not self.fatura.aberta:
+                raise ValidationError(f'Fatura {self.fatura} já está fechada')
+            if not self.fatura.cartao.ativo:
+                raise ValidationError(f'Cartão {self.fatura.cartao} não está ativo')
         super(CompraCartao, self).save(*args, **kwargs)
 
     def __str__(self):

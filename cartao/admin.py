@@ -15,6 +15,8 @@ class BandeiraAdmin(admin.ModelAdmin):
 @admin.register(models.Cartao)
 class CartaoAdmin(admin.ModelAdmin):
     inlines = [CartaoAliasSMSInline]
+    list_display = ['__str__', 'ativo']
+    list_filter = ['bandeira', 'ativo']
 
 
 class CompraCartaoInline(admin.TabularInline):
