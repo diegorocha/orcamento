@@ -136,9 +136,9 @@ class CompraCartao(models.Model):
             self.valor_inicial = self.valor_real
         if self.fatura:
             if not self.fatura.aberta:
-                raise ValidationError(f'Fatura {self.fatura} já está fechada')
+                raise ValidationError('Fatura %s já está fechada' % self.fatura)
             if not self.fatura.cartao.ativo:
-                raise ValidationError(f'Cartão {self.fatura.cartao} não está ativo')
+                raise ValidationError('Cartão %s não está ativo' % self.fatura.cartao)
         super(CompraCartao, self).save(*args, **kwargs)
 
     def __str__(self):
