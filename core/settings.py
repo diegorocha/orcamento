@@ -35,6 +35,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'core.middlewares.VersionMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -91,8 +92,21 @@ USE_TZ = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
 
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
-STATIC_URL = config('STATIC_URL', default='/static/')
+VERSION_CODE = config('VERSION_CODE', default='dev')
+VERSION_CODE_HEADER = config('VERSION_CODE_HEADER', default='X-Version')
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.9/howto/static-files/
+STATIC_S3 = config('STATIC_S3', cast=bool, default=False)
+if STATIC_S3:
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME', default='orcamento-static')
+    AWS_LOCATION = VERSION_CODE
+    AWS_QUERYSTRING_AUTH = config('AWS_QUERYSTRING_AUTH', cast=bool, default=False)
+    STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{VERSION_CODE}/'
+else:
+    STATIC_URL = config('STATIC_URL', default='/static/')
+    STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 
 STATICFILES_DIRS = [
     os.path.join(PROJECT_ROOT, 'static'),
@@ -101,7 +115,7 @@ STATICFILES_DIRS = [
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'orcamento:home'
 
-CORS_ORIGIN_ALLOW_ALL = DEBUG
+CORS_ORIGIN_ALLOW_ALL = False
 
 CORS_ORIGIN_WHITELIST = config('CORS_ORIGIN_WHITELIST', default='').split(',')
 

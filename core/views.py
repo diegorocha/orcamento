@@ -1,8 +1,7 @@
 # coding: utf-8
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-
-from compras.models import ListaCompras
-from orcamento.models import Orcamento
+from django.http import JsonResponse
+from django.views import generic
 
 
 class PermissionRequired(PermissionRequiredMixin):
@@ -24,3 +23,6 @@ class BaseViewMixin(LoginRequiredMixin, PermissionRequired):
     pass
 
 
+class HealthCheckView(generic.View):
+    def get(self, request):
+        return JsonResponse({"status": "OK"}, status=200)

@@ -72,3 +72,4 @@ target/
 .idea
 
 core/staticfiles/
+.terraform

@@ -2,6 +2,7 @@ from django.contrib import admin
 from rest_framework import routers
 from cartao import api as api_cartao
 from compras import api as api_compras
+from core.views import HealthCheckView
 from orcamento import api as api_orcamento
 from django.conf.urls import url, include
 from django.contrib.auth import views as auth_views
@@ -32,4 +33,5 @@ urlpatterns = [
     url(r'^cartao/', include('cartao.urls', namespace='cartao')),
     url(r'^viagem/', include('viagem.urls', namespace='viagem')),
     url(r'', include('orcamento.urls', namespace='orcamento')),
+    url(r'^healthcheck/', HealthCheckView.as_view(), name='healthcheck'),
 ]

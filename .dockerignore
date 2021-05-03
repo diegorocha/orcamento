@@ -1,0 +1,7 @@
+Dockerfile
+terraform/
+coverage/
+.coverage
+.env
+.travis.yml
+.travis-env
