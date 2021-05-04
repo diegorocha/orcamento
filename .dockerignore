@@ -5,3 +5,5 @@ coverage/
 .env
 .travis.yml
 .travis-env
+Makefile
+release.sh
