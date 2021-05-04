@@ -1,10 +1,8 @@
 FROM python:3.6-alpine
 
-RUN apk add gcc musl-dev python3-dev postgresql-dev
+RUN apk add gcc musl-dev python3-dev postgresql-dev libxslt-dev
 
-RUN apk add libxslt-dev
-
-RUN pip install pip==21.0.1
+RUN pip install pip==21.1.1
 
 WORKDIR /usr/app
 
@@ -15,5 +13,9 @@ RUN pip install -r /usr/app/requirements.txt
 COPY . /usr/app
 
 EXPOSE 80
+
+ARG VERSION_CODE=dev
+
+ENV VERSION_CODE=$VERSION_CODE
 
 ENTRYPOINT ["gunicorn", "-b", ":80", "core.wsgi"]

@@ -23,10 +23,12 @@ class Cartao(models.Model):
     class Meta:
         verbose_name = 'Cartão'
         verbose_name_plural = 'Cartões'
+        ordering = ['ordem']
     bandeira = models.ForeignKey(Bandeira, on_delete=models.CASCADE, related_name='cartoes')
     descricao = models.CharField('Descrição', max_length=50, blank=True, null=True)
     limite = models.DecimalField('Limite', max_digits=8, decimal_places=2, blank=True, null=True)
     ativo = models.BooleanField('Ativo', blank=True, null=False, default=True)
+    ordem = models.IntegerField('Ordem', blank=True, null=False, default=1)
 
     def __str__(self):
         return '%s %s' % (self.descricao, self.bandeira)
