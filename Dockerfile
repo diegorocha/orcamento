@@ -1,5 +1,7 @@
 FROM python:3.6-alpine
 
+RUN apk update && apk upgrade
+
 RUN apk add gcc musl-dev python3-dev postgresql-dev libxslt-dev
 
 RUN pip install pip==21.1.1
