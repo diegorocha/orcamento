@@ -12,7 +12,7 @@ terraform {
 locals {
   domain_name = "diegorocha.com.br"
   subdomain = "orcamento.${local.domain_name}"
-  dns_destination = "palver.${local.domain_name}"
+  dns_destination = "hardin.${local.domain_name}"
 }
 
 resource "aws_s3_bucket" "bucket_staticfiles" {
