@@ -9,5 +9,8 @@ ecr-login:
 build:
 	docker build -t 215758104365.dkr.ecr.us-east-1.amazonaws.com/orcamento:dev .
 
+clean-storage:
+	@python clean-storage.py "orcamento" "orcamento-static"
+
 release: ecr-login
 	./release.sh
