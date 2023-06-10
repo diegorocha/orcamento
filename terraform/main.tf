@@ -10,48 +10,80 @@ terraform {
   }
 }
 
-locals {
-  domain_name = "diegorocha.com.br"
-  subdomain = "orcamento.${local.domain_name}"
-  dns_destination = "hardin.${local.domain_name}"
+provider "aws" {
+  region = "us-east-1"
+  default_tags { tags = local.provider_tags }
 }
 
-resource "aws_s3_bucket" "bucket_staticfiles" {
-  bucket = "orcamento-static"
-  acl    = "private"
+data "aws_caller_identity" "current" {}
 
-  cors_rule {
-    allowed_headers = ["*"]
-    allowed_methods = ["GET"]
-    allowed_origins = [
-      "https://orcamento.diegorocha.com.br",
-      "http://localhost:8000"
-    ]
-    expose_headers  = ["ETag"]
-    max_age_seconds = 3000
-  }
-
-  tags = {
+locals {
+  domain_name     = "diegorocha.com.br"
+  subdomain       = "orcamento.${local.domain_name}"
+  static_domain   = "orcamento-static.${local.domain_name}"
+  contas_domain   = "orcamento-contas.${local.domain_name}"
+  dns_destination = "hardin.${local.domain_name}"
+  provider_tags = {
     service = "orcamento"
     backup  = "false"
   }
 }
 
+resource "aws_s3_bucket" "static" {
+  bucket = "orcamento-static"
+}
+
+resource "aws_s3_bucket_ownership_controls" "static" {
+  bucket = aws_s3_bucket.static.bucket
+
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "static" {
+  bucket = aws_s3_bucket.static.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 resource "aws_s3_bucket_policy" "bucket_staticfiles_policy" {
-  bucket = aws_s3_bucket.bucket_staticfiles.id
+  bucket = aws_s3_bucket.static.id
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Effect    = "Allow"
-        Principal = "*"
-        Action = [
-          "s3:GetObject",
-        ]
+        Sid    = "AllowAllToRootAndCreator",
+        Effect = "Allow",
+        Principal = {
+          "AWS" : [
+            "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+            data.aws_caller_identity.current.arn,
+          ]
+        }
+        Action = "s3:*",
         Resource = [
-          "${aws_s3_bucket.bucket_staticfiles.arn}/*"
+          aws_s3_bucket.static.arn,
+          "${aws_s3_bucket.static.arn}/*",
         ]
+      },
+      {
+        Sid    = "AllowCloudFrontServicePrincipalReadOnly",
+        Effect = "Allow",
+        Principal = {
+          Service = "cloudfront.amazonaws.com"
+        },
+        Action   = "s3:GetObject",
+        Resource = "${aws_s3_bucket.static.arn}/*",
+        Condition = {
+          "StringEquals" : {
+            "AWS:SourceArn" : aws_cloudfront_distribution.static.arn,
+          }
+        }
       },
     ]
   })
@@ -60,7 +92,7 @@ resource "aws_s3_bucket_policy" "bucket_staticfiles_policy" {
 resource "aws_iam_policy" "policy_orcamento_s3" {
   name        = "policy_orcamento_s3"
   path        = "/"
-  description = "Policy to allow read/write to ${aws_s3_bucket.bucket_staticfiles.bucket} bucket"
+  description = "Policy to allow read/write to ${aws_s3_bucket.static.bucket} bucket"
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -76,71 +108,85 @@ resource "aws_iam_policy" "policy_orcamento_s3" {
           "s3:PutObjectAcl"
         ]
         Resource = [
-          aws_s3_bucket.bucket_staticfiles.arn,
-          "${aws_s3_bucket.bucket_staticfiles.arn}/*",
-          aws_s3_bucket.bucket_contas.arn,
-          "${aws_s3_bucket.bucket_contas.arn}/*",
+          aws_s3_bucket.static.arn,
+          "${aws_s3_bucket.static.arn}/*",
+          aws_s3_bucket.contas.arn,
+          "${aws_s3_bucket.contas.arn}/*",
         ]
       },
     ]
   })
 }
 
-resource "aws_s3_bucket" "bucket_contas" {
+resource "aws_s3_bucket" "contas" {
   bucket = "orcamento-contas"
-  acl = "private"
+}
 
-  cors_rule {
-    allowed_headers = ["*"]
-    allowed_methods = ["GET"]
-    allowed_origins = [
-      "https://orcamento.diegorocha.com.br",
-      "http://localhost:8000"
-    ]
-    expose_headers  = ["ETag"]
-    max_age_seconds = 3000
-  }
+resource "aws_s3_bucket_ownership_controls" "contas" {
+  bucket = aws_s3_bucket.contas.bucket
 
-  website {
-    index_document = "index.html"
-    error_document = "error.html"
-  }
-
-  tags = {
-    service = "orcamento"
-    backup  = "false"
+  rule {
+    object_ownership = "BucketOwnerEnforced"
   }
 }
 
+resource "aws_s3_bucket_public_access_block" "contas" {
+  bucket = aws_s3_bucket.contas.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 resource "aws_s3_bucket_policy" "bucket_contas_policy" {
-  bucket = aws_s3_bucket.bucket_contas.id
+  bucket = aws_s3_bucket.contas.id
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Effect    = "Allow"
-        Principal = "*"
-        Action = [
-          "s3:GetObject",
-        ]
+        Sid    = "AllowAllToRootAndCreator",
+        Effect = "Allow",
+        Principal = {
+          "AWS" : [
+            "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+            data.aws_caller_identity.current.arn,
+          ]
+        }
+        Action = "s3:*",
         Resource = [
-          "${aws_s3_bucket.bucket_contas.arn}/*"
+          aws_s3_bucket.contas.arn,
+          "${aws_s3_bucket.contas.arn}/*",
         ]
+      },
+      {
+        Sid    = "AllowCloudFrontServicePrincipalReadOnly",
+        Effect = "Allow",
+        Principal = {
+          Service = "cloudfront.amazonaws.com"
+        },
+        Action   = "s3:GetObject",
+        Resource = "${aws_s3_bucket.contas.arn}/*",
+        Condition = {
+          "StringEquals" : {
+            "AWS:SourceArn" : aws_cloudfront_distribution.contas.arn,
+          }
+        }
       },
     ]
   })
 }
 
 data "aws_route53_zone" "hosted_zone" {
-  name  = local.domain_name
+  name = local.domain_name
 }
 
 resource "aws_route53_record" "record_orcamento" {
   zone_id = data.aws_route53_zone.hosted_zone.id
-  name = local.subdomain
-  type = "CNAME"
-  ttl = 60
+  name    = local.subdomain
+  type    = "CNAME"
+  ttl     = 60
   records = [local.dns_destination]
 }
 
@@ -181,17 +227,13 @@ resource "aws_ecr_lifecycle_policy" "ecr_repository_lifecycle" {
 }
 
 output "orcamento_bucket_name" {
-  value = aws_s3_bucket.bucket_staticfiles.bucket
+  value = aws_s3_bucket.static.bucket
 }
 
 output "orcamento_policies_arn" {
   value = [
     aws_iam_policy.policy_orcamento_s3.arn
   ]
-}
-
-output "contas_url" {
-  value = aws_s3_bucket.bucket_contas.website_endpoint
 }
 
 output "ecr_repository_url" {
