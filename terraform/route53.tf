@@ -1,5 +1,17 @@
+data "aws_route53_zone" "hosted_zone" {
+  name = local.domain_name
+}
+
 locals {
   alias_records = ["A", "AAAA"]
+}
+
+resource "aws_route53_record" "record_orcamento" {
+  zone_id = data.aws_route53_zone.hosted_zone.id
+  name    = local.subdomain
+  type    = "CNAME"
+  ttl     = 60
+  records = [local.dns_destination]
 }
 
 resource "aws_route53_record" "contas" {
