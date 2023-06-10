@@ -99,12 +99,12 @@ VERSION_CODE_HEADER = config('VERSION_CODE_HEADER', default='X-Version')
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 STATIC_S3 = config('STATIC_S3', cast=bool, default=False)
 if STATIC_S3:
-    STATIC_URL_BASE = config('STATIC_URL_BASE', default='https://orcamento-static.diegorocha.com.br')
+    AWS_S3_CUSTOM_DOMAIN = config('AWS_S3_CUSTOM_DOMAIN', default='https://orcamento-static.diegorocha.com.br')
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME', default='orcamento-static')
     AWS_LOCATION = VERSION_CODE
     AWS_QUERYSTRING_AUTH = config('AWS_QUERYSTRING_AUTH', cast=bool, default=False)
-    STATIC_URL = f'{STATIC_URL_BASE}/{VERSION_CODE}/'
+    STATIC_URL = f'{AWS_S3_CUSTOM_DOMAIN}/{VERSION_CODE}/'
 else:
     STATIC_URL = config('STATIC_URL', default='/static/')
     STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
