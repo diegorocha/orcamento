@@ -15,4 +15,14 @@ provider "aws" {
   default_tags { tags = local.provider_tags }
 }
 
+provider "google" {
+  project = "diegor-infra"
+  region  = "us-central1"
+}
+
+provider "google-beta" {
+  project = "diegor-infra"
+  region  = "us-central1"
+}
+
 data "aws_caller_identity" "current" {}
