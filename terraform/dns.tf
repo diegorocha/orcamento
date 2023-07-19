@@ -5,7 +5,7 @@ locals {
 resource "google_dns_record_set" "orcamento" {
   name = "${local.subdomain}."
   type = "CNAME"
-  ttl = 600
+  ttl  = 600
 
   managed_zone = local.gcp_managed_zone
 
@@ -15,7 +15,7 @@ resource "google_dns_record_set" "orcamento" {
 resource "google_dns_record_set" "contas" {
   name = "${local.contas_domain}."
   type = "CNAME"
-  ttl = 600
+  ttl  = 600
 
   managed_zone = local.gcp_managed_zone
 
@@ -25,7 +25,7 @@ resource "google_dns_record_set" "contas" {
 resource "google_dns_record_set" "static" {
   name = "${local.static_domain}."
   type = "CNAME"
-  ttl = 600
+  ttl  = 600
 
   managed_zone = local.gcp_managed_zone
 
