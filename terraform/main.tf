@@ -16,13 +16,28 @@ provider "aws" {
 }
 
 provider "google" {
-  project = "diegor-infra"
-  region  = "us-central1"
+  project = local.gcp_project
+  region  = local.gcp_region
 }
 
 provider "google-beta" {
-  project = "diegor-infra"
-  region  = "us-central1"
+  project = local.gcp_project
+  region  = local.gcp_region
+}
+
+provider "kubernetes" {
+  host  = "https://${data.google_container_cluster.k8s.endpoint}"
+  token = data.google_client_config.provider.access_token
+  cluster_ca_certificate = base64decode(
+    data.google_container_cluster.k8s.master_auth[0].cluster_ca_certificate,
+  )
 }
 
 data "aws_caller_identity" "current" {}
+
+data "google_client_config" "provider" {}
+
+data "google_container_cluster" "k8s" {
+  name     = "k8s"
+  location = local.gcp_region
+}

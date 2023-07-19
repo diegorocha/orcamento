@@ -4,6 +4,8 @@ locals {
   static_domain   = "orcamento-static.${local.domain_name}"
   contas_domain   = "orcamento-contas.${local.domain_name}"
   dns_destination = "hardin.${local.domain_name}"
+  gcp_project     = "diegor-infra"
+  gcp_region      = "us-central1"
   provider_tags = {
     service = "orcamento"
     backup  = "false"
