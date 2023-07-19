@@ -16,11 +16,6 @@ output "orcamento_bucket_name" {
   value = aws_s3_bucket.static.bucket
 }
 
-output "orcamento_policies_arn" {
-  value = [
-    aws_iam_policy.policy_orcamento_s3.arn
-  ]
-}
 
 output "ecr_repository_url" {
   value = aws_ecr_repository.ecr_repository.repository_url

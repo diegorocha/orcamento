@@ -1,3 +1,23 @@
+locals {
+  attach_policies_on_ec2_role       = true
+  attach_policies_on_ec2_role_count = local.attach_policies_on_ec2_role ? 1 : 0
+}
+
+
+data "terraform_remote_state" "infra" {
+  count = local.attach_policies_on_ec2_role_count
+
+  backend = "s3"
+
+  config = {
+    bucket               = "diegor-terraform"
+    workspace_key_prefix = ""
+    key                  = "diegor-infra/terraform.tfstate"
+    region               = "us-east-1"
+    profile              = "diego"
+  }
+}
+
 resource "aws_iam_policy" "policy_orcamento_s3" {
   name        = "policy_orcamento_s3"
   path        = "/"
@@ -25,4 +45,10 @@ resource "aws_iam_policy" "policy_orcamento_s3" {
       },
     ]
   })
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_role_policies_orcamento" {
+  count      = local.attach_policies_on_ec2_role_count
+  role       = data.terraform_remote_state.infra[count.index].outputs.roles.ec2
+  policy_arn = aws_iam_policy.policy_orcamento_s3.arn
 }
