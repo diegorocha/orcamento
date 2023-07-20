@@ -12,5 +12,5 @@ build:
 clean-storage:
 	@python clean-storage.py "orcamento" "orcamento-static"
 
-release: ecr-login
+release:
 	./release.sh
