@@ -100,17 +100,52 @@ resource "kubernetes_annotations" "service_orcamento" {
   }
 
   annotations = {
-    "cloud.google.com/neg" = jsonencode({
-      ingress = true
-    })
     "cloud.google.com/backend-config" = jsonencode({
       default = "orcamento"
     })
   }
 
+  force = true
+
   depends_on = [kubernetes_manifest.backend_config_orcamento]
 }
 
+resource "kubernetes_manifest" "route" {
+  manifest = {
+    apiVersion = "gateway.networking.k8s.io/v1beta1"
+    kind       = "HTTPRoute"
+
+    metadata = {
+      name      = "orcamento"
+      namespace = local.namespace
+    }
+
+    spec = {
+      parentRefs = [
+        {
+          name      = "gateway"
+          namespace = "default"
+        }
+      ]
+      hostnames = [
+        local.subdomain
+      ]
+      rules = [
+        {
+          matches = [{
+            path = {
+              value = "/"
+            }
+          }]
+          backendRefs = [{
+            name = "orcamento"
+            port = local.app_healthcheck.port
+          }]
+        },
+      ]
+    }
+  }
+}
 
 resource "kubernetes_deployment" "orcamento" {
   metadata {
