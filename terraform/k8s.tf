@@ -1,4 +1,5 @@
 locals {
+  app_name = "orcamento"
   app_envs = {
     DEBUG                   = "False"
     CONTAS_URL              = "https://orcamento-contas.diegorocha.com.br"
@@ -23,6 +24,11 @@ locals {
     EMAIL_HOST_USER     = "email_host_user"
     EMAIL_HOST_PASSWORD = "email_host_password"
   }
+  app_resources = {
+    cpu               = "250m"
+    memory            = "512Mi"
+    ephemeral-storage = "128Mi"
+  }
   app_healthcheck = {
     path    = "/healthcheck/"
     port    = 80
@@ -30,6 +36,7 @@ locals {
     initial = 15
   }
   database_name = "raych"
+  gateway_name  = "gateway"
   namespace     = "default"
 }
 
@@ -50,7 +57,7 @@ resource "kubernetes_manifest" "backend_config_orcamento" {
     kind       = "BackendConfig"
 
     metadata = {
-      name      = "orcamento"
+      name      = local.app_name
       namespace = local.namespace
     }
 
@@ -67,13 +74,13 @@ resource "kubernetes_manifest" "backend_config_orcamento" {
 
 resource "kubernetes_service" "orcamento" {
   metadata {
-    name      = "orcamento"
+    name      = local.app_name
     namespace = local.namespace
   }
 
   spec {
     selector = {
-      app = "orcamento"
+      app = local.app_name
     }
 
     port {
@@ -101,7 +108,7 @@ resource "kubernetes_annotations" "service_orcamento" {
 
   annotations = {
     "cloud.google.com/backend-config" = jsonencode({
-      default = "orcamento"
+      default = local.app_name
     })
   }
 
@@ -116,15 +123,15 @@ resource "kubernetes_manifest" "route" {
     kind       = "HTTPRoute"
 
     metadata = {
-      name      = "orcamento"
+      name      = local.app_name
       namespace = local.namespace
     }
 
     spec = {
       parentRefs = [
         {
-          name      = "gateway"
-          namespace = "default"
+          name      = local.gateway_name
+          namespace = local.namespace
         }
       ]
       hostnames = [
@@ -138,7 +145,7 @@ resource "kubernetes_manifest" "route" {
             }
           }]
           backendRefs = [{
-            name = "orcamento"
+            name = local.app_name
             port = local.app_healthcheck.port
           }]
         },
@@ -149,10 +156,10 @@ resource "kubernetes_manifest" "route" {
 
 resource "kubernetes_deployment" "orcamento" {
   metadata {
-    name      = "orcamento"
+    name      = local.app_name
     namespace = local.namespace
     labels = {
-      app = "orcamento"
+      app = local.app_name
     }
   }
 
@@ -161,33 +168,25 @@ resource "kubernetes_deployment" "orcamento" {
 
     selector {
       match_labels = {
-        app = "orcamento"
+        app = local.app_name
       }
     }
 
     template {
       metadata {
         labels = {
-          app = "orcamento"
+          app = local.app_name
         }
       }
 
       spec {
         container {
           image = "${var.app_image}:${var.app_version}"
-          name  = "orcamento"
+          name  = local.app_name
 
           resources {
-            limits = {
-              cpu               = "250m"
-              memory            = "512Mi"
-              ephemeral-storage = "128Mi"
-            }
-            requests = {
-              cpu               = "250m"
-              memory            = "512Mi"
-              ephemeral-storage = "128Mi"
-            }
+            limits   = local.app_resources
+            requests = local.app_resources
           }
 
           security_context {
