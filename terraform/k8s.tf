@@ -32,8 +32,9 @@ locals {
   app_healthcheck = {
     path    = "/healthcheck/"
     port    = 80
-    period  = 15
+    period  = 30
     initial = 15
+    timeout = 5
   }
   database_name = "raych"
   gateway_name  = "gateway"
@@ -67,6 +68,7 @@ resource "kubernetes_manifest" "backend_config_orcamento" {
         port             = local.app_healthcheck.port
         type             = "HTTP"
         requestPath      = local.app_healthcheck.path
+        timeoutSec       = local.app_healthcheck.timeout
       }
     }
   }
@@ -211,6 +213,7 @@ resource "kubernetes_deployment" "orcamento" {
 
             initial_delay_seconds = local.app_healthcheck.initial
             period_seconds        = local.app_healthcheck.period
+            timeout_seconds       = local.app_healthcheck.timeout
           }
 
           liveness_probe {
@@ -221,6 +224,7 @@ resource "kubernetes_deployment" "orcamento" {
 
             initial_delay_seconds = local.app_healthcheck.initial
             period_seconds        = local.app_healthcheck.period
+            timeout_seconds       = local.app_healthcheck.timeout
           }
 
           dynamic "env" {
