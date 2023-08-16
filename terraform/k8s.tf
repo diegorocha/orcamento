@@ -18,12 +18,14 @@ locals {
     AWS_QUERYSTRING_AUTH    = "False"
   }
   app_secret_name = "orcamento"
+  app_timeout     = 60
   app_secrets = {
     DATABASE_URL        = "database_url"
     SECRET              = "secret"
     EMAIL_HOST_USER     = "email_host_user"
     EMAIL_HOST_PASSWORD = "email_host_password"
   }
+  app_port = 80
   app_resources = {
     cpu               = "250m"
     memory            = "512Mi"
@@ -31,7 +33,6 @@ locals {
   }
   app_healthcheck = {
     path    = "/healthcheck/"
-    port    = 80
     period  = 30
     initial = 15
     timeout = 5
@@ -52,10 +53,10 @@ resource "kubernetes_secret" "orcamento" {
   type = "Opaque"
 }
 
-resource "kubernetes_manifest" "backend_config_orcamento" {
+resource "kubernetes_manifest" "healthcheck_policy" {
   manifest = {
-    apiVersion = "cloud.google.com/v1"
-    kind       = "BackendConfig"
+    apiVersion = "networking.gke.io/v1"
+    kind       = "HealthCheckPolicy"
 
     metadata = {
       name      = local.app_name
@@ -63,12 +64,44 @@ resource "kubernetes_manifest" "backend_config_orcamento" {
     }
 
     spec = {
-      healthCheck = {
+      default = {
         checkIntervalSec = local.app_healthcheck.period
-        port             = local.app_healthcheck.port
-        type             = "HTTP"
-        requestPath      = local.app_healthcheck.path
         timeoutSec       = local.app_healthcheck.timeout
+        config = {
+          type = "HTTP"
+          httpHealthCheck = {
+            portSpecification = "USE_SERVING_PORT"
+            requestPath       = local.app_healthcheck.path
+          }
+        }
+      }
+      targetRef = {
+        group = ""
+        kind  = "Service"
+        name  = local.app_name
+      }
+    }
+  }
+}
+
+resource "kubernetes_manifest" "backend_policy" {
+  manifest = {
+    apiVersion = "networking.gke.io/v1"
+    kind       = "GCPBackendPolicy"
+
+    metadata = {
+      name      = local.app_name
+      namespace = local.namespace
+    }
+
+    spec = {
+      default = {
+        timeoutSec = local.app_timeout
+      }
+      targetRef = {
+        group = ""
+        kind  = "Service"
+        name  = local.app_name
       }
     }
   }
@@ -86,8 +119,8 @@ resource "kubernetes_service" "orcamento" {
     }
 
     port {
-      port        = 80
-      target_port = 80
+      port        = local.app_port
+      target_port = local.app_port
     }
 
     type = "NodePort"
@@ -98,25 +131,6 @@ resource "kubernetes_service" "orcamento" {
       metadata[0].annotations
     ]
   }
-}
-
-resource "kubernetes_annotations" "service_orcamento" {
-  api_version = "v1"
-  kind        = "Service"
-
-  metadata {
-    name = kubernetes_service.orcamento.metadata[0].name
-  }
-
-  annotations = {
-    "cloud.google.com/backend-config" = jsonencode({
-      default = local.app_name
-    })
-  }
-
-  force = true
-
-  depends_on = [kubernetes_manifest.backend_config_orcamento]
 }
 
 resource "kubernetes_manifest" "route" {
@@ -148,7 +162,7 @@ resource "kubernetes_manifest" "route" {
           }]
           backendRefs = [{
             name = local.app_name
-            port = local.app_healthcheck.port
+            port = local.app_port
           }]
         },
       ]
@@ -208,7 +222,7 @@ resource "kubernetes_deployment" "orcamento" {
           readiness_probe {
             http_get {
               path = local.app_healthcheck.path
-              port = local.app_healthcheck.port
+              port = local.app_port
             }
 
             initial_delay_seconds = local.app_healthcheck.initial
@@ -219,7 +233,7 @@ resource "kubernetes_deployment" "orcamento" {
           liveness_probe {
             http_get {
               path = local.app_healthcheck.path
-              port = local.app_healthcheck.port
+              port = local.app_port
             }
 
             initial_delay_seconds = local.app_healthcheck.initial
