@@ -196,6 +196,20 @@ resource "kubernetes_deployment" "orcamento" {
       }
 
       spec {
+        termination_grace_period_seconds = 25
+        affinity {
+          node_affinity {
+            required_during_scheduling_ignored_during_execution {
+              node_selector_term {
+                match_expressions {
+                  key      = "cloud.google.com/gke-spot"
+                  operator = "In"
+                  values   = ["true"]
+                }
+              }
+            }
+          }
+        }
         container {
           image = "${var.app_image}:${var.app_version}"
           name  = local.app_name
