@@ -92,7 +92,7 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav">
-              <li><a href="{% url 'admin:index' %}">Admin</a></li>
+              <li><a href="{% if admin_url %}{{ admin_url }}{% else %}{% url 'admin:index' %}{% endif %}">Admin</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li class="dropdown">

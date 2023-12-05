@@ -1,6 +1,7 @@
 # coding: utf-8
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import JsonResponse
+from django.urls import reverse
 from django.views import generic
 
 
@@ -20,7 +21,17 @@ class PermissionRequired(PermissionRequiredMixin):
 
 
 class BaseViewMixin(LoginRequiredMixin, PermissionRequired):
-    pass
+    def get_admin_url(self):
+        if hasattr(self, 'object') and hasattr(self.object, '_meta'):
+            return reverse(
+                f'admin:{self.object._meta.app_label}_{self.object._meta.model_name}_change',
+                args=(self.object.id,),
+            )
+
+    def get_context_data(self, **kwargs):
+        context = super(BaseViewMixin, self).get_context_data(**kwargs)
+        context['admin_url'] = self.get_admin_url()
+        return context
 
 
 class HealthCheckView(generic.View):
