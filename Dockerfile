@@ -2,7 +2,9 @@ FROM python:3.8-alpine
 
 RUN apk update && apk upgrade
 
-RUN apk add gcc musl-dev python3-dev postgresql-dev postgresql-client libxslt-dev
+RUN apk add gcc musl-dev python3-dev postgresql-dev postgresql-client libxslt-dev tzdata
+
+ENV TZ=America/Sao_Paulo
 
 RUN pip install pip==21.1.1
 
