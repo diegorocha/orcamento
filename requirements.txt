@@ -1,7 +1,7 @@
 appdirs==1.4.0
 asgiref==3.6.0
-boto3==1.17.56
-botocore==1.20.56
+boto3==1.34.138
+botocore==1.34.138
 certifi==2023.07.22
 chardet==3.0.4
 charset-normalizer==2.1.0
@@ -9,7 +9,7 @@ coverage==4.3.1
 coveralls==1.1
 dj-database-url==0.4.1
 Django==4.2.13
-django-cors-headers==2.4.0
+django-cors-headers==4.4.0
 django-storages==1.11.1
 djangorestframework==3.15.2
 docopt==0.6.2
@@ -21,7 +21,7 @@ lxml==5.0.0
 model-mommy==1.5.1
 nose==1.3.7
 packaging==16.8
-psycopg2==2.8.6
+psycopg2==2.9.9
 pyexcel-ezodf==0.3.4
 pyexcel-io==0.5.20
 pyexcel-ods3==0.5.3
@@ -30,9 +30,8 @@ python-dateutil==2.8.1
 python-decouple==3.0
 pytz==2017.3
 requests==2.32.2
-s3transfer==0.4.2
+s3transfer==0.10.2
 simplejson==3.11.1
-six==1.11.0
 sqlparse==0.5.0
 urllib3==1.26.19
 whitenoise==3.2

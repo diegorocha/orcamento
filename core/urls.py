@@ -4,7 +4,7 @@ from cartao import api as api_cartao
 from compras import api as api_compras
 from core.views import HealthCheckView
 from orcamento import api as api_orcamento
-from django.conf.urls import url, include
+from django.urls import path, include
 from django.contrib.auth import views as auth_views
 
 
@@ -24,14 +24,14 @@ router.register(r'cartao/sms', api_cartao.SMSCartaoViewset)
 
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-    url(r'^logout/$', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^api/', include((router.urls, 'api'), namespace='api')),
-    url(r'^compras/', include('compras.urls', namespace='compras')),
-    url(r'^cartao/', include('cartao.urls', namespace='cartao')),
-    url(r'^viagem/', include('viagem.urls', namespace='viagem')),
-    url(r'', include('orcamento.urls', namespace='orcamento')),
-    url(r'^healthcheck/', HealthCheckView.as_view(), name='healthcheck'),
+    path('admin/', admin.site.urls),
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api/', include((router.urls, 'api'), namespace='api')),
+    path('compras/', include('compras.urls', namespace='compras')),
+    path('cartao/', include('cartao.urls', namespace='cartao')),
+    path('viagem/', include('viagem.urls', namespace='viagem')),
+    path('', include('orcamento.urls', namespace='orcamento')),
+    path('healthcheck/', HealthCheckView.as_view(), name='healthcheck'),
 ]

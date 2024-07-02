@@ -1,11 +1,9 @@
 # coding: utf-8
 from __future__ import unicode_literals
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from orcamento.models import Orcamento
 
 
-@python_2_unicode_compatible
 class Mercado(models.Model):
     class Meta:
         verbose_name = 'Mercado'
@@ -27,7 +25,6 @@ class Mercado(models.Model):
         return 'Mercado de %s' % (self.orcamento)
 
 
-@python_2_unicode_compatible
 class SecaoLista(models.Model):
     class Meta:
         verbose_name = 'Seção'
@@ -40,7 +37,6 @@ class SecaoLista(models.Model):
         return self.descricao
 
 
-@python_2_unicode_compatible
 class ItensLista(models.Model):
     class Meta:
         verbose_name = 'Item'
@@ -62,7 +58,6 @@ class ItensLista(models.Model):
         return self.descricao
 
 
-@python_2_unicode_compatible
 class ListaCompras(models.Model):
     class Meta:
         verbose_name = 'Lista'
@@ -85,7 +80,6 @@ class ListaCompras(models.Model):
         return 'Lista de compras de %s' % self.orcamento
 
 
-@python_2_unicode_compatible
 class ItemCompra(models.Model):
     class Meta:
         ordering = ('lista', 'item')

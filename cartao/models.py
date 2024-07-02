@@ -4,10 +4,8 @@ from copy import copy
 from django.core.exceptions import ValidationError
 from django.db import models
 from orcamento.models import Orcamento, Categoria
-from django.utils.encoding import python_2_unicode_compatible
 
 
-@python_2_unicode_compatible
 class Bandeira(models.Model):
     class Meta:
         verbose_name = 'Bandeira'
@@ -18,7 +16,6 @@ class Bandeira(models.Model):
         return self.descricao
 
 
-@python_2_unicode_compatible
 class Cartao(models.Model):
     class Meta:
         verbose_name = 'Cartão'
@@ -34,7 +31,6 @@ class Cartao(models.Model):
         return '%s %s' % (self.descricao, self.bandeira)
 
 
-@python_2_unicode_compatible
 class Fatura(models.Model):
     class Meta:
         verbose_name = 'Fatura'
@@ -113,7 +109,6 @@ class Fatura(models.Model):
         return '%s - %s' % (self.cartao, self.orcamento)
 
 
-@python_2_unicode_compatible
 class CompraCartao(models.Model):
     class Meta:
         verbose_name = 'Compra Cartão'
@@ -147,7 +142,6 @@ class CompraCartao(models.Model):
         return '%s de %s' % (self.descricao, self.fatura)
 
 
-@python_2_unicode_compatible
 class SMSCartao(models.Model):
     class Meta:
         verbose_name = 'SMS Cartão'
@@ -160,7 +154,6 @@ class SMSCartao(models.Model):
         return self.texto
 
 
-@python_2_unicode_compatible
 class CartaoAliasSMS(models.Model):
     cartao = models.ForeignKey(Cartao, on_delete=models.CASCADE, related_name='alias')
     texto = models.CharField(max_length=50)

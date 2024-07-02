@@ -1,12 +1,9 @@
 from django.db import models
 from django.db.models import Sum
-from django.utils.encoding import python_2_unicode_compatible
-
 from cartao.models import Fatura
 from orcamento.models import Orcamento, Categoria, Moeda
 
 
-@python_2_unicode_compatible
 class Viagem(models.Model):
     class Meta:
         verbose_name = 'Viagem'
@@ -25,7 +22,6 @@ class Viagem(models.Model):
         return self.descricao + self.inicio.strftime(' %Y/%m')
 
 
-@python_2_unicode_compatible
 class GastoViagem(models.Model):
     class Meta:
         verbose_name = 'Gasto Viagem'

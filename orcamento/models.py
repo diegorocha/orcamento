@@ -2,10 +2,8 @@
 from __future__ import unicode_literals
 from decimal import *
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 
 
-@python_2_unicode_compatible
 class Categoria(models.Model):
     class Meta:
         verbose_name = 'Categoria'
@@ -17,7 +15,6 @@ class Categoria(models.Model):
         return self.descricao
 
 
-@python_2_unicode_compatible
 class Moeda(models.Model):
     class Meta:
         verbose_name = 'Moeda'
@@ -31,7 +28,6 @@ class Moeda(models.Model):
         return self.nome
 
 
-@python_2_unicode_compatible
 class Orcamento(models.Model):
     class Meta:
         verbose_name = 'Orçamento'
@@ -90,7 +86,6 @@ class Orcamento(models.Model):
         return '%04d/%02d' % (self.ano, self.mes)
 
 
-@python_2_unicode_compatible
 class Conta(models.Model):
     class Meta:
         verbose_name = 'Conta'
@@ -136,7 +131,6 @@ class Conta(models.Model):
         return '%s de %s' % (self.nome, self.orcamento)
 
 
-@python_2_unicode_compatible
 class EnergiaEletrica(models.Model):
     class Meta:
         verbose_name = 'Consumo de Energia Elétrica'

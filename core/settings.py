@@ -132,6 +132,9 @@ REST_FRAMEWORK = {
 ADMINS = ((config('ADMIN_NAME'), config('ADMIN_EMAIL')), )
 SERVER_EMAIL = config('SERVER_EMAIL', default='root@localhost')
 
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 if config('USE_SMTP', default=False, cast=bool):
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')

@@ -75,27 +75,27 @@ class ListaViewTest(LoginRequiredMixin, TestCase):
         lista.orcamento.save()
         url = reverse('compras:lista', kwargs={'ano': lista.orcamento.ano, 'mes': lista.orcamento.mes})
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(response.context['object'], lista)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['object'], lista)
 
 
 class ItensListaTest(TestCase):
     def test_quantidade(self):
         item = mommy.make(ItensLista)
         quantidade_str = '%d %s' % (item.quantidade_sugerida, item.unidade)
-        self.assertEquals(item.quantidade, quantidade_str)
+        self.assertEqual(item.quantidade, quantidade_str)
 
 
 class ItemCompraTest(TestCase):
     def test_quantidade(self):
         item = mommy.make(ItemCompra, _fill_optional=True)
         quantidade_str = '%d %s' % (item.quantidade_sugerida, item.unidade)
-        self.assertEquals(item.quantidade, quantidade_str)
+        self.assertEqual(item.quantidade, quantidade_str)
 
     def test_quantidade_do_item(self):
         item = mommy.make(ItemCompra)
         quantidade_str = '%d %s' % (item.item.quantidade_sugerida, item.item.unidade)
-        self.assertEquals(item.quantidade, quantidade_str)
+        self.assertEqual(item.quantidade, quantidade_str)
 
 
 class ListaComprasViewTest(LoginRequiredMixin, TestCase):
@@ -104,13 +104,13 @@ class ListaComprasViewTest(LoginRequiredMixin, TestCase):
         mommy.make(ListaCompras, _quantity=qtd)
         url = reverse('compras:listas')
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(response.context['itens']), qtd)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['itens']), qtd)
 
     def test_get_empty(self):
         empty_message = 'Nenhuma lista cadastrada'.encode()
         url = reverse('compras:listas')
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(response.context['itens']), 0)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['itens']), 0)
         self.assertIn(empty_message, response.content)

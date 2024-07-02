@@ -31,16 +31,16 @@ class OrcamentoViewSetTest(LoginRequiredMixin, ModelViewSetTestCase):
         conta_com_categoria = mommy.make(models.Conta, orcamento=orcamento, categoria=categoria)
         conta_sem_categoria = mommy.make(models.Conta, orcamento=orcamento, categoria=None)
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertIsNotNone(data)
         for estatistica in data:
             self.assertIsNotNone(estatistica['orcamento'])
-            self.assertEquals(estatistica['orcamento'], str(orcamento))
+            self.assertEqual(estatistica['orcamento'], str(orcamento))
             self.assertIsNotNone(estatistica['total'])
-            self.assertEquals(estatistica['total'], float(orcamento.previsto))
+            self.assertEqual(estatistica['total'], float(orcamento.previsto))
             self.assertIsNotNone(estatistica['categorias'])
-            self.assertEquals(len(estatistica['categorias']), models.Categoria.objects.count() + 1)
+            self.assertEqual(len(estatistica['categorias']), models.Categoria.objects.count() + 1)
             for categoria in estatistica['categorias']:
                 self.assertIsNotNone(categoria['categoria'])
                 self.assertIsNotNone(categoria['percentual'])
@@ -52,11 +52,11 @@ class OrcamentoViewSetTest(LoginRequiredMixin, ModelViewSetTestCase):
             mommy.make(Mercado, orcamento=orcamento, tipo=0)
             mommy.make(Mercado, orcamento=orcamento, tipo=1)
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertIsNotNone(data)
         self.assertIsNotNone(data['eixos'])
-        self.assertEquals(len(data['eixos']), 12)
+        self.assertEqual(len(data['eixos']), 12)
         self.assertIsNotNone(data['data'])
         for data in data['data']:
             self.assertIsNotNone(data['name'])
@@ -68,11 +68,11 @@ class OrcamentoViewSetTest(LoginRequiredMixin, ModelViewSetTestCase):
             mommy.make(models.Conta, orcamento=orcamento)
             mommy.make(models.Conta, orcamento=orcamento)
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertIsNotNone(data)
         self.assertIsNotNone(data['eixos'])
-        self.assertEquals(len(data['eixos']), 12)
+        self.assertEqual(len(data['eixos']), 12)
         self.assertIsNotNone(data['data'])
         for data in data['data']:
             self.assertIsNotNone(data['name'])
@@ -84,7 +84,7 @@ class OrcamentoViewSetTest(LoginRequiredMixin, ModelViewSetTestCase):
         mommy.make(models.Conta, orcamento=orcamento, _quantity=5)
         url = self.get_detail_endpoint(orcamento.pk) + 'estatistica/'
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertIsNotNone(data)
         self.assertIsNotNone(data['categorias'])
@@ -107,7 +107,7 @@ class ContaViewSetTest(LoginRequiredMixin, ModelViewSetTestCase):
         mommy.make(models.Conta, categoria=None, _quantity=5)
         url = self.endpoint + 'sem_categoria/'
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertGreater(len(data), 0)
         for conta in data:
@@ -117,14 +117,14 @@ class ContaViewSetTest(LoginRequiredMixin, ModelViewSetTestCase):
         mommy.make(models.Conta, categoria=None, _quantity=5)
         url = self.endpoint + 'ajustar/'
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertIsNone(data['categoria'])
 
     def test_ajustar_vazio(self):
         url = self.endpoint + 'ajustar/'
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
 
 class ContaAdminTest(LoginRequiredMixin, TestCase):
@@ -140,55 +140,55 @@ class ContaAdminTest(LoginRequiredMixin, TestCase):
         data = {'action': 'acertar_situacao',
                 '_selected_action': [str(conta.pk) for conta in contas]}
         response = self.client.post(url, data, follow=True)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
 
 class OrcamentoTest(TestCase):
     def test_previsto_vazio(self):
         orcamento = mommy.make(models.Orcamento)
-        self.assertEquals(orcamento.previsto, 0)
+        self.assertEqual(orcamento.previsto, 0)
 
     def test_previsto(self):
         orcamento = mommy.make(models.Orcamento)
         contas = mommy.make(models.Conta, orcamento=orcamento, _fill_optional=['previsto'], _quantity=5)
         soma = sum([conta.previsto for conta in contas])
-        self.assertEquals(orcamento.previsto, soma)
+        self.assertEqual(orcamento.previsto, soma)
 
     def test_a_pagar_vazio(self):
         orcamento = mommy.make(models.Orcamento)
-        self.assertEquals(orcamento.a_pagar, 0)
+        self.assertEqual(orcamento.a_pagar, 0)
 
     def test_a_pagar(self):
         orcamento = mommy.make(models.Orcamento)
         contas = mommy.make(models.Conta, orcamento=orcamento, _fill_optional=['a_pagar'], _quantity=5)
         soma = sum([conta.a_pagar for conta in contas])
-        self.assertEquals(orcamento.a_pagar, soma)
+        self.assertEqual(orcamento.a_pagar, soma)
 
     def test_pago_vazio(self):
         orcamento = mommy.make(models.Orcamento)
-        self.assertEquals(orcamento.pago, 0)
+        self.assertEqual(orcamento.pago, 0)
 
     def test_pago(self):
         orcamento = mommy.make(models.Orcamento)
         contas = mommy.make(models.Conta, orcamento=orcamento, _fill_optional=['pago'], _quantity=5)
         soma = sum([conta.pago for conta in contas])
-        self.assertEquals(orcamento.pago, soma)
+        self.assertEqual(orcamento.pago, soma)
 
     def test_mercado_principal_vazio(self):
         orcamento = mommy.make(models.Orcamento)
-        self.assertEquals(orcamento.mercado_principal, 0)
+        self.assertEqual(orcamento.mercado_principal, 0)
 
     def test_mercado_principal(self):
         orcamento = mommy.make(models.Orcamento)
         mercados = mommy.make(Mercado, orcamento=orcamento, tipo=0, _quantity=5)
         soma = sum([mercado.valor for mercado in mercados])
-        self.assertEquals(orcamento.mercado_principal, soma)
+        self.assertEqual(orcamento.mercado_principal, soma)
 
     def test_mercado_outros_vazio(self):
         orcamento = mommy.make(models.Orcamento)
         mercados = mommy.make(Mercado, orcamento=orcamento, tipo=1, _quantity=5)
         soma = sum([mercado.valor for mercado in mercados])
-        self.assertEquals(orcamento.mercado_outros, soma)
+        self.assertEqual(orcamento.mercado_outros, soma)
 
 
 class OrcamentoAtualViewTest(LoginRequiredMixin, TestCase):
@@ -209,15 +209,15 @@ class ListaViewTest(LoginRequiredMixin, TestCase):
         orcamento.save()
         url = reverse('orcamento:orcamento', kwargs={'ano': orcamento.ano, 'mes': orcamento.mes})
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(response.context['object'], orcamento)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['object'], orcamento)
 
 
 class EstatisticaViewTest(LoginRequiredMixin, TestCase):
     def test_get(self):
         url = reverse('orcamento:estatistica')
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
 
 class CopiarTest(TestCase):
@@ -247,7 +247,7 @@ class CopiarTest(TestCase):
         call_command('copiar', *args, **opts)
         destino = models.Orcamento.objects.get(**novo)
         self.assertIsNotNone(destino)
-        self.assertEquals(destino.contas.count(), qtd_recorrente)
+        self.assertEqual(destino.contas.count(), qtd_recorrente)
 
     def test_copiar_nao_copia_ultima_parcela(self):
         origem = mommy.make(models.Orcamento)
@@ -264,7 +264,7 @@ class CopiarTest(TestCase):
         call_command('copiar', *args, **opts)
         destino = models.Orcamento.objects.get(**novo)
         self.assertIsNotNone(destino)
-        self.assertEquals(destino.contas.count(), qtd_recorrente)
+        self.assertEqual(destino.contas.count(), qtd_recorrente)
 
 
 class ListaOrcamentoViewTest(LoginRequiredMixin, TestCase):
@@ -273,13 +273,13 @@ class ListaOrcamentoViewTest(LoginRequiredMixin, TestCase):
         mommy.make(models.Orcamento, _quantity=qtd_orcamento)
         url = reverse('orcamento:orcamentos')
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(response.context['itens']), qtd_orcamento)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['itens']), qtd_orcamento)
 
     def test_get_empty(self):
         empty_message = u'Nenhum orçamento cadastrado'.encode('utf-8')
         url = reverse('orcamento:orcamentos')
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(response.context['itens']), 0)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['itens']), 0)
         self.assertIn(empty_message, response.content)
