@@ -19,7 +19,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
-    'django_nose',
     'orcamento',
     'compras',
     'cartao',
@@ -129,8 +128,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     )
 }
-
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 ADMINS = ((config('ADMIN_NAME'), config('ADMIN_EMAIL')), )
 SERVER_EMAIL = config('SERVER_EMAIL', default='root@localhost')
