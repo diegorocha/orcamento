@@ -1,12 +1,16 @@
-FROM python:3.8-alpine
+FROM python:3.12-alpine
+
+RUN adduser -D app
 
 RUN apk update && apk upgrade
 
 RUN apk add gcc musl-dev python3-dev postgresql-dev postgresql-client libxslt-dev tzdata
 
+USER app
+
 ENV TZ=America/Sao_Paulo
 
-RUN pip install pip==21.1.1
+RUN pip install pip==24.1.1
 
 WORKDIR /usr/app
 
