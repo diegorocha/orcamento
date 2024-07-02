@@ -26,6 +26,7 @@ locals {
     EMAIL_HOST_PASSWORD = "email_host_password"
   }
   app_port = 80
+  container_port = 8080
   app_resources = {
     cpu               = "250m"
     memory            = "512Mi"
@@ -120,7 +121,7 @@ resource "kubernetes_service" "orcamento" {
 
     port {
       port        = local.app_port
-      target_port = local.app_port
+      target_port = local.container_port
     }
 
     type = "NodePort"
