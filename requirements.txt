@@ -1,5 +1,5 @@
 appdirs==1.4.0
-asgiref==3.6.0
+asgiref==3.7.0
 boto3==1.34.138
 botocore==1.34.138
 certifi==2023.07.22
@@ -8,7 +8,7 @@ charset-normalizer==2.1.0
 coverage==4.3.1
 coveralls==1.1
 dj-database-url==0.4.1
-Django==4.2.13
+Django==5.0.6
 django-cors-headers==4.4.0
 django-storages==1.11.1
 djangorestframework==3.15.2
