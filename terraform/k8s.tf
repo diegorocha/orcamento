@@ -237,7 +237,7 @@ resource "kubernetes_deployment" "orcamento" {
           readiness_probe {
             http_get {
               path = local.app_healthcheck.path
-              port = local.app_port
+              port = local.container_port
             }
 
             initial_delay_seconds = local.app_healthcheck.initial
@@ -248,7 +248,7 @@ resource "kubernetes_deployment" "orcamento" {
           liveness_probe {
             http_get {
               path = local.app_healthcheck.path
-              port = local.app_port
+              port = local.container_port
             }
 
             initial_delay_seconds = local.app_healthcheck.initial
