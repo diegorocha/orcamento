@@ -3,7 +3,7 @@ locals {
   app_envs = {
     DEBUG                   = "False"
     CONTAS_URL              = "https://orcamento-contas.diegorocha.com.br"
-    CORS_ORIGIN_WHITELIST   = "http://orcamento-contas.diegorocha.com.br"
+    CORS_ORIGIN_WHITELIST   = "https://orcamento-contas.diegorocha.com.br"
     ADMIN_NAME              = "Diego Rocha"
     ADMIN_EMAIL             = "diego@diegorocha.com.br"
     USE_SMTP                = "True"
