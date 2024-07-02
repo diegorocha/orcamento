@@ -26,4 +26,4 @@ ARG VERSION_CODE=dev
 
 ENV VERSION_CODE=$VERSION_CODE
 
-ENTRYPOINT ["gunicorn", "-b", ":80", "core.wsgi"]
+ENTRYPOINT ["python3", "-m", "gunicorn", "-b", ":80", "core.wsgi"]
