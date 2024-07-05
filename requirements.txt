@@ -2,7 +2,7 @@ appdirs==1.4.0
 asgiref==3.7.0
 boto3==1.34.138
 botocore==1.34.138
-certifi==2023.07.22
+certifi==2024.7.4
 chardet==3.0.4
 charset-normalizer==2.1.0
 coverage==4.3.1
