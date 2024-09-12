@@ -28,8 +28,8 @@ locals {
   app_port = 80
   container_port = 8080
   app_resources = {
-    cpu               = "100m"
-    memory            = "128Mi"
+    cpu               = "250m"
+    memory            = "512Mi"
     ephemeral-storage = "64Mi"
   }
   app_healthcheck = {
