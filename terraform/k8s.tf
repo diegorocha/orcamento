@@ -38,7 +38,6 @@ locals {
     initial = 15
     timeout = 5
   }
-  database_name = "raych"
   gateway_name  = "gateway"
   namespace     = "default"
 }
@@ -147,8 +146,9 @@ resource "kubernetes_manifest" "route" {
     spec = {
       parentRefs = [
         {
-          name      = local.gateway_name
-          namespace = local.namespace
+          name        = local.gateway_name
+          namespace   = local.namespace
+          sectionName = "https"
         }
       ]
       hostnames = [
