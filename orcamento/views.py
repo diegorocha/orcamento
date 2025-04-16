@@ -11,8 +11,15 @@ class HomeView(BaseViewMixin, generic.TemplateView):
     template_name = 'home.html'
 
     def get_redirect_url(self, *args, **kwargs):
-        hoje = date.today()
-        return reverse('orcamento:orcamento', kwargs={'ano': hoje.year, 'mes': hoje.month})
+        default = models.OrcamentoDefault.objects.first()
+        if default:
+            ano = default.orcamento.ano
+            mes = default.orcamento.mes
+        else:
+            hoje = date.today()
+            ano = hoje.year
+            mes = hoje.month
+        return reverse('orcamento:orcamento', kwargs={'ano': ano, 'mes': mes})
 
     def get(self, request, *args, **kwargs):
         if request.user.has_perm('orcamento.change_orcamento'):

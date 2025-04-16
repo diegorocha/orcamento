@@ -41,3 +41,8 @@ class ContaAdmin(admin.ModelAdmin):
             if conta.esta_pago() and conta.situacao != models.Conta.PAGO:
                 conta.situacao = models.Conta.PAGO
                 conta.save()
+
+
+@admin.register(models.OrcamentoDefault)
+class OrcamentoDefaultAdmin(admin.ModelAdmin):
+    pass

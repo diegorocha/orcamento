@@ -1,6 +1,6 @@
 # coding=utf-8
 from __future__ import unicode_literals
-from datetime import date
+from datetime import date, timedelta
 from random import randrange
 
 from django.core.management import CommandError
@@ -192,11 +192,20 @@ class OrcamentoTest(TestCase):
 
 
 class OrcamentoAtualViewTest(LoginRequiredMixin, TestCase):
-    def test_verify_redirect(self):
+    def test_verify_redirect_without_orcamento_default(self):
         hoje = date.today()
         url = reverse('orcamento:home')
         redirect_url = reverse('orcamento:orcamento', kwargs={'ano': hoje.year, 'mes': hoje.month})
         mommy.make(models.Orcamento, ano=hoje.year, mes=hoje.month)
+        response = self.client.get(url)
+        self.assertRedirects(response, redirect_url)
+
+    def test_verify_redirect_with_orcamento_default(self):
+        data = date.today() + timedelta(days=30)
+        url = reverse('orcamento:home')
+        redirect_url = reverse('orcamento:orcamento', kwargs={'ano': data.year, 'mes': data.month})
+        orcamento = mommy.make(models.Orcamento, ano=data.year, mes=data.month)
+        mommy.make(models.OrcamentoDefault, orcamento=orcamento)
         response = self.client.get(url)
         self.assertRedirects(response, redirect_url)
 
@@ -283,3 +292,11 @@ class ListaOrcamentoViewTest(LoginRequiredMixin, TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['itens']), 0)
         self.assertIn(empty_message, response.content)
+
+
+class OrcamentoDefaultModelTest(TestCase):
+    def test_must_have_just_one(self):
+        mommy.make(models.OrcamentoDefault)
+        second = mommy.make(models.OrcamentoDefault)
+        self.assertEqual(models.OrcamentoDefault.objects.count(), 1)
+        self.assertEqual(models.OrcamentoDefault.objects.first().pk, second.pk)

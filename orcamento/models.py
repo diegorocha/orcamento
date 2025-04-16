@@ -2,6 +2,9 @@
 from __future__ import unicode_literals
 from decimal import *
 from django.db import models
+from django.db.models import Q
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Categoria(models.Model):
@@ -157,3 +160,21 @@ class EnergiaEletrica(models.Model):
 
     def __str__(self):
         return '%s de %s' % (self._meta.verbose_name, self.orcamento)
+
+
+class OrcamentoDefault(models.Model):
+    class Meta:
+        verbose_name = 'Orcamento Default'
+        verbose_name_plural = 'Orcamento Default'
+        ordering = ['-orcamento']
+    orcamento = models.ForeignKey(Orcamento, on_delete=models.CASCADE, related_name='default')
+
+    def __str__(self):
+        return str(self.orcamento)
+
+
+@receiver(post_save, sender=OrcamentoDefault, dispatch_uid="update_stock_count")
+def single_orcamento_default(sender, instance, created, **kwargs):
+    # This model should have only one row
+    if created:
+        OrcamentoDefault.objects.filter(~Q(pk=instance.pk)).delete()
