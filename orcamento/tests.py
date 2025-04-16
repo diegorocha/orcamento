@@ -1,6 +1,8 @@
 # coding=utf-8
 from __future__ import unicode_literals
+
 from datetime import date, timedelta
+from io import StringIO
 from random import randrange
 
 from django.core.management import CommandError
@@ -252,8 +254,11 @@ class CopiarTest(TestCase):
         mommy.make(models.Conta, orcamento=origem, recorrente=False, _quantity=randrange(10, 20))
         novo = {'ano': origem.ano, 'mes': origem.mes + 1}
         args = [str(origem), '%(ano)d/%(mes)d' % novo]
-        opts = {}
-        call_command('copiar', *args, **opts)
+        with StringIO() as out:
+            opts = {
+                'stdout': out,
+            }
+            call_command('copiar', *args, **opts)
         destino = models.Orcamento.objects.get(**novo)
         self.assertIsNotNone(destino)
         self.assertEqual(destino.contas.count(), qtd_recorrente)
@@ -269,8 +274,11 @@ class CopiarTest(TestCase):
         contas[0].save()
         novo = {'ano': origem.ano, 'mes': origem.mes + 1}
         args = [str(origem), '%(ano)d/%(mes)d' % novo]
-        opts = {}
-        call_command('copiar', *args, **opts)
+        with StringIO() as out:
+            opts = {
+                'stdout': out,
+            }
+            call_command('copiar', *args, **opts)
         destino = models.Orcamento.objects.get(**novo)
         self.assertIsNotNone(destino)
         self.assertEqual(destino.contas.count(), qtd_recorrente)
